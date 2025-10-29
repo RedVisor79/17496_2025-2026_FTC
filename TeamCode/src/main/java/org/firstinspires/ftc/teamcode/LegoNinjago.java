@@ -32,6 +32,7 @@ public class LegoNinjago extends LinearOpMode{
         RF = hardwareMap.get(DcMotor.class, "RF");
         LS = hardwareMap.get(DcMotor.class, "LS");
         RS = hardwareMap.get(DcMotor.class, "RS");
+        Intake = hardwareMap.get(DcMotor.class, "Intake");
 
         LB.setDirection(DcMotor.Direction.REVERSE);
         LF.setDirection(DcMotor.Direction.REVERSE);
