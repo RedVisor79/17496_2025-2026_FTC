@@ -51,7 +51,7 @@ public class LegoNinjago extends LinearOpMode{
             //drive();//it drives
             double max;
             double forward = -1*gamepad1.left_stick_y;
-            double strafe = -1*gamepad1.left_stick_x;
+            double strafe = 1*gamepad1.left_stick_x;
             double direction = gamepad1.right_stick_x;
 
             lbPower = forward-strafe+direction;
