@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.JavaUtil;
 
@@ -34,7 +35,7 @@ public class LegoNinjago extends LinearOpMode{
         RS = hardwareMap.get(DcMotor.class, "RS");
         Intake = hardwareMap.get(DcMotor.class, "Intake");
 
-        LB.setDirection(DcMotor.Direction.REVERSE);
+        LB.setDirection(DcMotor.Direction.FORWARD);
         LF.setDirection(DcMotor.Direction.REVERSE);
         RB.setDirection(DcMotor.Direction.FORWARD);
         RF.setDirection(DcMotor.Direction.FORWARD);
@@ -57,8 +58,8 @@ public class LegoNinjago extends LinearOpMode{
     }
 
     private void shooter(){//shooter
-        LS.setPower(gamepad1.right_trigger);
-        RS.setPower(-1*gamepad1.right_trigger);
+        LS.setPower(-gamepad1.right_trigger);
+        RS.setPower(gamepad1.right_trigger);
     }
     private void intake(){
         if (gamepad1.dpad_left)
@@ -95,5 +96,45 @@ public class LegoNinjago extends LinearOpMode{
         LF.setPower(lfPower);
         RB.setPower(rbPower);
         RF.setPower(rfPower);
+    }
+
+    private void test(){
+        boolean trial = false;
+        if (gamepad1.y) {
+            trial = !trial;
+        }
+        while (trial) {
+            if (gamepad1.dpad_left) {
+                LB.setPower(0.25);
+                LF.setPower(0);
+                RB.setPower(0);
+                RF.setPower(0);
+            }
+            else if (gamepad1.dpad_up) {
+                LB.setPower(0);
+                LF.setPower(0.25);
+                RB.setPower(0);
+                RF.setPower(0);
+            }
+            else if (gamepad1.dpad_right) {
+                LB.setPower(0);
+                LF.setPower(0);
+                RB.setPower(0.25);
+                RF.setPower(0);
+            }
+            else if (gamepad1.dpad_down) {
+                LB.setPower(0);
+                LF.setPower(0);
+                RB.setPower(0);
+                RF.setPower(0.25);
+            }
+            else if (gamepad1.y) {
+                LB.setPower(0);
+                LF.setPower(0);
+                RB.setPower(0);
+                RF.setPower(0);
+                trial = false;
+            }
+        }
     }
 }
