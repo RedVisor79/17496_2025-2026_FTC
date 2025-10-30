@@ -48,7 +48,32 @@ public class LegoNinjago extends LinearOpMode{
         while (opModeIsActive()) {
             shooter();//it shoots
             intake();//it intakes
-            drive();//it drives
+            //drive();//it drives
+            double max;
+            double forward = -1*gamepad1.left_stick_y;
+            double strafe = -1*gamepad1.left_stick_x;
+            double direction = gamepad1.right_stick_x;
+
+            lbPower = forward-strafe+direction;
+            lfPower = forward+strafe+direction;
+            rbPower = forward+strafe-direction;
+            rfPower = forward-strafe-direction;
+
+            max = Math.max(Math.abs(lfPower), Math.abs(rfPower));
+            max = Math.max(max, Math.abs(lbPower));
+            max = Math.max(max, Math.abs(rbPower));
+
+            if (max > 1.0) {
+                lbPower  /= max;
+                lfPower /= max;
+                rbPower   /= max;
+                rfPower  /= max;
+            }
+
+            LB.setPower(lbPower);
+            LF.setPower(lfPower);
+            RB.setPower(rbPower);
+            RF.setPower(rfPower);
 
             telemetry.addData("Status", "Run Time: "+runtime.toString());
             telemetry.addData("Front left/Right", JavaUtil.formatNumber(lfPower, 4, 2)+", "+JavaUtil.formatNumber(rfPower, 4, 2));
@@ -68,34 +93,6 @@ public class LegoNinjago extends LinearOpMode{
             Intake.setPower(-1);
         else
             Intake.setPower(0);
-    }
-
-    private void drive(){
-        double max;
-        double forward = -1*gamepad1.left_stick_y;
-        double strafe = -1*gamepad1.left_stick_x;
-        double direction = gamepad1.right_stick_x;
-
-        lbPower = forward-strafe+direction;
-        lfPower = forward+strafe+direction;
-        rbPower = forward+strafe-direction;
-        rfPower = forward-strafe-direction;
-
-        max = Math.max(Math.abs(lfPower), Math.abs(rfPower));
-        max = Math.max(max, Math.abs(lbPower));
-        max = Math.max(max, Math.abs(rbPower));
-
-        if (max > 1.0) {
-            lbPower  /= max;
-            lfPower /= max;
-            rbPower   /= max;
-            rfPower  /= max;
-        }
-
-        LB.setPower(lbPower);
-        LF.setPower(lfPower);
-        RB.setPower(rbPower);
-        RF.setPower(rfPower);
     }
 
     private void test(){
