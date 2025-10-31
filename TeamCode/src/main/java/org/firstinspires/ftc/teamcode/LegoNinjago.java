@@ -11,10 +11,10 @@ import org.firstinspires.ftc.robotcore.external.JavaUtil;
 public class LegoNinjago extends LinearOpMode{
 
     //motors
-    private DcMotor LB; //0D
-    private DcMotor LF; //1D
-    private DcMotor RB; //2D
-    private DcMotor RF; //3D
+    private DcMotor LB; //0C
+    private DcMotor LF; //1C
+    private DcMotor RB; //2C
+    private DcMotor RF; //3C
     private DcMotor LS; //0E
     private DcMotor RS; //1E
     private DcMotor Intake;//2E
@@ -48,10 +48,10 @@ public class LegoNinjago extends LinearOpMode{
         while (opModeIsActive()) {
             shooter();//it shoots
             intake();//it intakes
+            brakes();//it brakes
             boolean trial=false;
             if (gamepad1.y){
                 trial = true;
-                System.out.println(trial);
                 test(trial);
             }
 
@@ -88,7 +88,17 @@ public class LegoNinjago extends LinearOpMode{
             telemetry.update();
         }
     }
-
+    private void brakes(){
+        if (gamepad1.left_bumper && gamepad1.right_bumper){
+            LB.setPower(0);
+            LF.setPower(0);
+            RB.setPower(0);
+            RF.setPower(0);
+            LS.setPower(0);
+            RS.setPower(0);
+            Intake.setPower(0);
+        }
+    }
     private void shooter(){//shooter
         LS.setPower(-gamepad1.right_trigger);
         RS.setPower(gamepad1.right_trigger);
