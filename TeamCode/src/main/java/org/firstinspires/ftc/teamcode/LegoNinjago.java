@@ -48,7 +48,14 @@ public class LegoNinjago extends LinearOpMode{
         while (opModeIsActive()) {
             shooter();//it shoots
             intake();//it intakes
-            //drive();//it drives
+            boolean trial=false;
+            if (gamepad1.y){
+                trial = true;
+                System.out.println(trial);
+                test(trial);
+            }
+
+
             double max;
             double forward = -1*gamepad1.left_stick_y;
             double strafe = 1*gamepad1.left_stick_x;
@@ -95,41 +102,52 @@ public class LegoNinjago extends LinearOpMode{
             Intake.setPower(0);
     }
 
-    private void test(){
-        boolean trial = false;
-        if (gamepad1.y) {
-            trial = !trial;
-        }
+    private void test(boolean trial){
         while (trial) {
             if (gamepad1.dpad_left) {
                 LB.setPower(0.25);
                 LF.setPower(0);
                 RB.setPower(0);
                 RF.setPower(0);
+                LS.setPower(0);
+                RS.setPower(0);
+                Intake.setPower(0);
             }
             else if (gamepad1.dpad_up) {
                 LB.setPower(0);
                 LF.setPower(0.25);
                 RB.setPower(0);
                 RF.setPower(0);
+                LS.setPower(0);
+                RS.setPower(0);
+                Intake.setPower(0);
             }
             else if (gamepad1.dpad_right) {
                 LB.setPower(0);
                 LF.setPower(0);
                 RB.setPower(0.25);
                 RF.setPower(0);
+                LS.setPower(0);
+                RS.setPower(0);
+                Intake.setPower(0);
             }
             else if (gamepad1.dpad_down) {
                 LB.setPower(0);
                 LF.setPower(0);
                 RB.setPower(0);
                 RF.setPower(0.25);
+                LS.setPower(0);
+                RS.setPower(0);
+                Intake.setPower(0);
             }
             else if (gamepad1.y) {
                 LB.setPower(0);
                 LF.setPower(0);
                 RB.setPower(0);
                 RF.setPower(0);
+                LS.setPower(0);
+                RS.setPower(0);
+                Intake.setPower(0);
                 trial = false;
             }
         }
