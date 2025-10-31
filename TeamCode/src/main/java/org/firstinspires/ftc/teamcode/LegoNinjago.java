@@ -104,10 +104,10 @@ public class LegoNinjago extends LinearOpMode{
         RS.setPower(gamepad1.right_trigger);
     }
     private void intake(){
-        if (gamepad1.dpad_left)
-            Intake.setPower(1);
-        else if (gamepad1.dpad_right)
+        if (gamepad1.left_trigger >0)//in
             Intake.setPower(-1);
+        else if (gamepad1.left_bumper)//out
+            Intake.setPower(1);
         else
             Intake.setPower(0);
     }
