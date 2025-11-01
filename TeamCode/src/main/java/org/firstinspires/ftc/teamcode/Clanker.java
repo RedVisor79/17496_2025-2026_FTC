@@ -84,10 +84,10 @@ public class Clanker extends LinearOpMode{
         LS.setPower(-1);
         RS.setPower(1);
     }
-    private void intake(boolean forwardReverse){
+    private void intake(boolean forwardReverse) {
         if (forwardReverse)
             Intake.setPower(-1);
         else
             Intake.setPower(-1);
-
+    }
 }
