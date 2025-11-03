@@ -47,6 +47,8 @@ public class Clanker extends LinearOpMode{
         //actual code lol
         while (opModeIsActive()) {
 
+            //add functions in for moveing and changing directions
+
 
             double max;
             double forward = -1*gamepad1.left_stick_y;
