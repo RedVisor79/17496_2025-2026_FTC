@@ -17,8 +17,10 @@ public class LegoNinjago extends LinearOpMode{
     private DcMotor LF; //1C
     private DcMotor RB; //2C
     private DcMotor RF; //3C
-    private DcMotorEx LS;//0E
-    private DcMotorEx RS;//1E
+    private DcMotor LS;//0E
+    private DcMotor RS;//1E
+    private DcMotorEx LSX;//0E
+    private DcMotorEx RSX;//1E
     private DcMotor Intake;//2E
 
     double lbPower;
@@ -33,14 +35,18 @@ public class LegoNinjago extends LinearOpMode{
         LF = hardwareMap.get(DcMotor.class, "LF");
         RB = hardwareMap.get(DcMotor.class, "RB");
         RF = hardwareMap.get(DcMotor.class, "RF");
-        LS = hardwareMap.get(DcMotorEx.class, "LS");
-        RS = hardwareMap.get(DcMotorEx.class, "RS");
+        LS = hardwareMap.get(DcMotor.class, "LS");
+        RS = hardwareMap.get(DcMotor.class, "RS");
+        LSX = hardwareMap.get(DcMotorEx.class, "LS");
+        RSX = hardwareMap.get(DcMotorEx.class, "RS");
         Intake = hardwareMap.get(DcMotor.class, "Intake");
 
         LB.setDirection(DcMotor.Direction.FORWARD);
         LF.setDirection(DcMotor.Direction.REVERSE);
-        RB.setDirection(DcMotor.Direction.FORWARD);
         RF.setDirection(DcMotor.Direction.FORWARD);
+        RB.setDirection(DcMotor.Direction.FORWARD);
+        LS.setDirection(DcMotor.Direction.REVERSE);
+        RS.setDirection(DcMotor.Direction.FORWARD);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         waitForStart();
@@ -48,7 +54,8 @@ public class LegoNinjago extends LinearOpMode{
 
         //actual code lol
         while (opModeIsActive()) {
-            shooter();//it shoots
+            //shooter();//it shoots
+            shooterEx(); //setVelocity version
             intake();//it intakes
             brakes();//it brakes
             boolean trial=false;
@@ -102,12 +109,18 @@ public class LegoNinjago extends LinearOpMode{
         }
     }
     private void shooter(){//shooter
-        while (gamepad1.right_trigger !=0){
-            LS.setVelocity(1000);
-            RS.setVelocity(1000);
+        LS.setPower(gamepad1.right_trigger);
+        RS.setPower(gamepad1.right_trigger);
+    }
+    private void shooterEx(){//shooter with setVelocity();
+        if (gamepad1.right_trigger>0) {
+            LSX.setVelocity(500);
+            RSX.setVelocity(500);
         }
-        //LS.setPower(gamepad1.right_trigger);
-        //RS.setPower(gamepad1.right_trigger);
+        else{
+            LSX.setVelocity(0);
+            RSX.setVelocity(0);
+        }
     }
     private void intake(){
         if (gamepad1.left_trigger >0)//in
