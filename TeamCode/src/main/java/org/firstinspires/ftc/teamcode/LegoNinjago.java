@@ -114,8 +114,8 @@ public class LegoNinjago extends LinearOpMode{
     }*/
     private void shooterEx(){//shooter with setVelocity();
         if (gamepad1.right_trigger>0) {
-            LSX.setVelocity(500);
-            RSX.setVelocity(500);
+            LSX.setVelocity(1000);
+            RSX.setVelocity(1000);
         }
         else{
             LSX.setVelocity(0);
