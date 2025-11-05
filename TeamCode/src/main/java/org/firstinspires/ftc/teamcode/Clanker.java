@@ -47,7 +47,7 @@ public class Clanker extends LinearOpMode{
         //actual code lol
         while (opModeIsActive()) {
 
-            //add functions in for moveing and changing directions
+            //add functions in for moving and changing directions
 
 
             double max;

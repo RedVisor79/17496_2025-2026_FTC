@@ -35,8 +35,8 @@ public class LegoNinjago extends LinearOpMode{
         LF = hardwareMap.get(DcMotor.class, "LF");
         RB = hardwareMap.get(DcMotor.class, "RB");
         RF = hardwareMap.get(DcMotor.class, "RF");
-        LS = hardwareMap.get(DcMotor.class, "LS");
-        RS = hardwareMap.get(DcMotor.class, "RS");
+        //LS = hardwareMap.get(DcMotor.class, "LS");
+        //RS = hardwareMap.get(DcMotor.class, "RS");
         LSX = hardwareMap.get(DcMotorEx.class, "LS");
         RSX = hardwareMap.get(DcMotorEx.class, "RS");
         Intake = hardwareMap.get(DcMotor.class, "Intake");
@@ -108,10 +108,10 @@ public class LegoNinjago extends LinearOpMode{
             Intake.setPower(0);
         }
     }
-    private void shooter(){//shooter
+    /*private void shooter(){//shooter
         LS.setPower(gamepad1.right_trigger);
         RS.setPower(gamepad1.right_trigger);
-    }
+    }*/
     private void shooterEx(){//shooter with setVelocity();
         if (gamepad1.right_trigger>0) {
             LSX.setVelocity(500);
