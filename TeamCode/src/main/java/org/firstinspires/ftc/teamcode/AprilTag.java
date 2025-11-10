@@ -14,7 +14,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
-public class AprilTag extends LinearOpMode {
+public class AprilTag {
     private VisionPortal visionPortal;
     private AprilTagProcessor aprilTag;
     private Telemetry telemetry;
