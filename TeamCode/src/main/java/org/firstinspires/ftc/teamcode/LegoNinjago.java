@@ -28,6 +28,8 @@ public class LegoNinjago extends LinearOpMode{
     double rbPower;
     double rfPower;
 
+    double SHOOTER_VELOCITY = 750.0;
+
     public void runOpMode() {
         ElapsedTime runtime = new ElapsedTime();
 
@@ -114,8 +116,8 @@ public class LegoNinjago extends LinearOpMode{
     }*/
     private void shooterEx(){//shooter with setVelocity();
         if (gamepad1.right_trigger>0) {
-            LSX.setVelocity(500);
-            RSX.setVelocity(500);
+            LSX.setVelocity(SHOOTER_VELOCITY);
+            RSX.setVelocity(SHOOTER_VELOCITY);
         }
         else{
             LSX.setVelocity(0);
