@@ -1,4 +1,5 @@
-/*package org.firstinspires.ftc.teamcode;
+//todo: implement FTC Dashboard
+package org.firstinspires.ftc.teamcode;
 
 import android.util.Size;
 
@@ -51,7 +52,6 @@ public class AprilTag extends LinearOpMode {
         FtcDashboard.getInstance().startCameraStream(visionPortal, 30);
     }
 
-    @Override
     public void update() {
         currentDetections = aprilTag.getDetections();
 
@@ -60,11 +60,11 @@ public class AprilTag extends LinearOpMode {
 
             // Assign label based on ID
             switch (detection.id) {
-                case 20: goalLabel = "bluegoal"; break;
+                case 20: goalLabel = "blueGoal"; break;
                 case 21: patternLabel = "GPP"; break;
                 case 22: patternLabel = "PGP"; break;
                 case 23: patternLabel = "PPG"; break;
-                case 24: goalLabel = "redgoal"; break;
+                case 24: goalLabel = "redGoal"; break;
                 default: goalLabel = "None"; break;
             }
         } else {
@@ -72,7 +72,6 @@ public class AprilTag extends LinearOpMode {
         }
     }
 
-    @Override
     public void addTelemetry() {
         if (currentDetections != null && !currentDetections.isEmpty()) {
             for (AprilTagDetection detection : currentDetections) {
@@ -113,10 +112,10 @@ public class AprilTag extends LinearOpMode {
         return CAMERA_WIDTH;
     }
 
-    public void stop() {
-        if (visionPortal != null) {
+
+    public void cameraOff() {
+        if (visionPortal != null)
             visionPortal.close();
-        }
     }
 
     // Distance calculation using pinhole camera model
@@ -133,4 +132,3 @@ public class AprilTag extends LinearOpMode {
         return visionPortal;
     }
 }
-*/
