@@ -28,7 +28,7 @@ public class LegoNinjago extends LinearOpMode{
     double rbPower;
     double rfPower;
 
-    double SHOOTER_VELOCITY = 750.0;
+    double SHOOTER_VELOCITY = 1700.0;
 
     public void runOpMode() {
         ElapsedTime runtime = new ElapsedTime();
@@ -47,8 +47,8 @@ public class LegoNinjago extends LinearOpMode{
         LF.setDirection(DcMotor.Direction.REVERSE);
         RF.setDirection(DcMotor.Direction.FORWARD);
         RB.setDirection(DcMotor.Direction.FORWARD);
-        LS.setDirection(DcMotor.Direction.REVERSE);
-        RS.setDirection(DcMotor.Direction.FORWARD);
+        LSX.setDirection(DcMotorEx.Direction.REVERSE);
+        RSX.setDirection(DcMotorEx.Direction.FORWARD);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         waitForStart();
