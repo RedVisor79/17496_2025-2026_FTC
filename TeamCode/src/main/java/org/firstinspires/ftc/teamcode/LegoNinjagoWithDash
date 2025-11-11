@@ -1,1 +1,151 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
+
+@Config
+@TeleOp(name = "LegoNinjagoDashboard")
+public class LegoNinjago extends LinearOpMode {
+
+    // Dashboard + tunables
+    private FtcDashboard dashboard = FtcDashboard.getInstance();
+    public static double SHOOTER_VELOCITY = 750.0;
+
+    // Movement and motors
+    private DcMotor LB, LF, RB, RF;
+    private DcMotorEx LSX, RSX;
+    private DcMotor Intake;
+
+    // Estimated position
+    double x = 0.0, y = 0.0, heading = 0.0;
+    double lastTime = 0.0;
+
+    @Override
+    public void runOpMode() {
+        ElapsedTime runtime = new ElapsedTime();
+
+        LB = hardwareMap.get(DcMotor.class, "LB");
+        LF = hardwareMap.get(DcMotor.class, "LF");
+        RB = hardwareMap.get(DcMotor.class, "RB");
+        RF = hardwareMap.get(DcMotor.class, "RF");
+        LSX = hardwareMap.get(DcMotorEx.class, "LS");
+        RSX = hardwareMap.get(DcMotorEx.class, "RS");
+        Intake = hardwareMap.get(DcMotor.class, "Intake");
+
+        LB.setDirection(DcMotor.Direction.FORWARD);
+        LF.setDirection(DcMotor.Direction.REVERSE);
+        RB.setDirection(DcMotor.Direction.FORWARD);
+        RF.setDirection(DcMotor.Direction.FORWARD);
+        LSX.setDirection(DcMotor.Direction.REVERSE);
+        RSX.setDirection(DcMotor.Direction.FORWARD);
+
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
+        waitForStart();
+        runtime.reset();
+        lastTime = runtime.seconds();
+
+        while (opModeIsActive()) {
+            double forward = -gamepad1.left_stick_y;
+            double strafe = gamepad1.left_stick_x;
+            double turn = gamepad1.right_stick_x;
+
+            double lbPower = forward - strafe + turn;
+            double lfPower = forward + strafe + turn;
+            double rbPower = forward + strafe - turn;
+            double rfPower = forward - strafe - turn;
+
+            double max = Math.max(Math.abs(lfPower), Math.abs(rfPower));
+            max = Math.max(max, Math.abs(lbPower));
+            max = Math.max(max, Math.abs(rbPower));
+            if (max > 1.0) {
+                lbPower /= max;
+                lfPower /= max;
+                rbPower /= max;
+                rfPower /= max;
+            }
+
+            LB.setPower(lbPower);
+            LF.setPower(lfPower);
+            RB.setPower(rbPower);
+            RF.setPower(rfPower);
+
+            shooterEx();
+            intake();
+            brakes();
+
+            // --- Simple position integration ---
+            double dt = runtime.seconds() - lastTime;
+            lastTime = runtime.seconds();
+
+            double avgForward = (lfPower + rfPower + lbPower + rbPower) / 4.0;
+            double avgTurn = (rfPower + rbPower - lfPower - lbPower) / 4.0;
+
+            double speedScale = 24.0; // adjust for real distance scaling
+            heading += avgTurn * dt * 90; // rough turn rate
+            x += avgForward * Math.cos(Math.toRadians(heading)) * dt * speedScale;
+            y += avgForward * Math.sin(Math.toRadians(heading)) * dt * speedScale;
+
+            // --- Dashboard telemetry ---
+            TelemetryPacket packet = new TelemetryPacket();
+            packet.put("Run Time", runtime.toString());
+            packet.put("Shooter Velocity (target)", SHOOTER_VELOCITY);
+            packet.put("X", x);
+            packet.put("Y", y);
+            packet.put("Heading", heading);
+            packet.put("LF Power", lfPower);
+            packet.put("RF Power", rfPower);
+            packet.put("LB Power", lbPower);
+            packet.put("RB Power", rbPower);
+            dashboard.sendTelemetryPacket(packet);
+
+            // --- Driver Station telemetry ---
+            telemetry.addData("Runtime", runtime.toString());
+            telemetry.addData("Shooter Target", SHOOTER_VELOCITY);
+            telemetry.addData("X", x);
+            telemetry.addData("Y", y);
+            telemetry.addData("Heading", heading);
+            telemetry.update();
+        }
+    }
+
+    private void brakes() {
+        if (gamepad1.left_bumper && gamepad1.right_bumper) {
+            LB.setPower(0);
+            LF.setPower(0);
+            RB.setPower(0);
+            RF.setPower(0);
+            LSX.setVelocity(0);
+            RSX.setVelocity(0);
+            Intake.setPower(0);
+        }
+    }
+
+    private void shooterEx() {
+        if (gamepad1.right_trigger > 0) {
+            LSX.setVelocity(SHOOTER_VELOCITY);
+            RSX.setVelocity(SHOOTER_VELOCITY);
+        } else {
+            LSX.setVelocity(0);
+            RSX.setVelocity(0);
+        }
+    }
+
+    private void intake() {
+        if (gamepad1.left_trigger > 0)
+            Intake.setPower(-1);
+        else if (gamepad1.left_bumper)
+            Intake.setPower(1);
+        else
+            Intake.setPower(0);
+    }
+}
 
