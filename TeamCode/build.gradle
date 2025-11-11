@@ -1,17 +1,6 @@
-//
-// build.gradle in TeamCode
-//
-// Most of the definitions for building your module reside in a common, shared
-// file 'build.common.gradle'. Being factored in this way makes it easier to
-// integrate updates to the FTC into your code. If you really need to customize
-// the build definitions, you can place those customizations in this file, but
-// please think carefully as to whether such customizations are really necessary
-// before doing so.
-//
+// TeamCode/build.gradle
 
-// Custom definitions may go here
-
-// Include common definitions from above.
+// Apply shared FTC build definitions
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
 
@@ -24,6 +13,9 @@ android {
 }
 
 dependencies {
+    // Link to the main FTC Robot Controller module
     implementation project(':FtcRobotController')
+
+    // ✅ FTC Dashboard library for telemetry and live tuning
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.8'
 }

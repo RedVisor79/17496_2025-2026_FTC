@@ -4,181 +4,171 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcore.external.JavaUtil;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+
+@Config
 @TeleOp(name = "LegoNinjago")
-public class LegoNinjago extends LinearOpMode{
+public class LegoNinjago extends LinearOpMode {
 
-    private DcMotor LB; //0C
-    private DcMotor LF; //1C
-    private DcMotor RB; //2C
-    private DcMotor RF; //3C
-    private DcMotor LS;//0E
-    private DcMotor RS;//1E
-    private DcMotorEx LSX;//0E
-    private DcMotorEx RSX;//1E
-    private DcMotor Intake;//2E
+    private DcMotor LB; // 0C
+    private DcMotor LF; // 1C
+    private DcMotor RB; // 2C
+    private DcMotor RF; // 3C
+    private DcMotorEx LSX; // 0E
+    private DcMotorEx RSX; // 1E
+    private DcMotor Intake; // 2E
 
+    // Drive power values
     double lbPower;
     double lfPower;
     double rbPower;
     double rfPower;
 
-    double SHOOTER_VELOCITY = 1700.0;
+    // Shooter velocity (tunable in FTC Dashboard)
+    public static double SHOOTER_VELOCITY = 1700.0;
 
+    @Override
     public void runOpMode() {
         ElapsedTime runtime = new ElapsedTime();
+        FtcDashboard dashboard = FtcDashboard.getInstance();
 
+        // Hardware mapping
         LB = hardwareMap.get(DcMotor.class, "LB");
         LF = hardwareMap.get(DcMotor.class, "LF");
         RB = hardwareMap.get(DcMotor.class, "RB");
         RF = hardwareMap.get(DcMotor.class, "RF");
-        //LS = hardwareMap.get(DcMotor.class, "LS");
-        //RS = hardwareMap.get(DcMotor.class, "RS");
         LSX = hardwareMap.get(DcMotorEx.class, "LS");
         RSX = hardwareMap.get(DcMotorEx.class, "RS");
         Intake = hardwareMap.get(DcMotor.class, "Intake");
 
+        // Motor directions
         LB.setDirection(DcMotor.Direction.FORWARD);
         LF.setDirection(DcMotor.Direction.REVERSE);
         RF.setDirection(DcMotor.Direction.FORWARD);
         RB.setDirection(DcMotor.Direction.FORWARD);
         LSX.setDirection(DcMotorEx.Direction.REVERSE);
         RSX.setDirection(DcMotorEx.Direction.FORWARD);
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+
         waitForStart();
         runtime.reset();
 
-        //actual code lol
         while (opModeIsActive()) {
-            //shooter();//it shoots
-            shooterEx(); //setVelocity version
-            intake();//it intakes
-            brakes();//it brakes
-            boolean trial=false;
-            if (gamepad1.y){
+            shooterEx();
+            intake();
+            brakes();
+
+            // Test mode (Y button)
+            boolean trial = false;
+            if (gamepad1.y) {
                 trial = true;
                 test(trial);
             }
 
+            // Mecanum drive calculations
+            double forward = -gamepad1.left_stick_y;
+            double strafe = gamepad1.left_stick_x;
+            double turn = gamepad1.right_stick_x;
 
-            double max;
-            double forward = -1*gamepad1.left_stick_y;
-            double strafe = 1*gamepad1.left_stick_x;
-            double direction = gamepad1.right_stick_x;
+            lbPower = forward - strafe + turn;
+            lfPower = forward + strafe + turn;
+            rbPower = forward + strafe - turn;
+            rfPower = forward - strafe - turn;
 
-            lbPower = forward-strafe+direction;
-            lfPower = forward+strafe+direction;
-            rbPower = forward+strafe-direction;
-            rfPower = forward-strafe-direction;
-
-            max = Math.max(Math.abs(lfPower), Math.abs(rfPower));
-            max = Math.max(max, Math.abs(lbPower));
-            max = Math.max(max, Math.abs(rbPower));
+            // Normalize
+            double max = Math.max(Math.max(Math.abs(lfPower), Math.abs(rfPower)),
+                    Math.max(Math.abs(lbPower), Math.abs(rbPower)));
 
             if (max > 1.0) {
-                lbPower  /= max;
+                lbPower /= max;
                 lfPower /= max;
-                rbPower   /= max;
-                rfPower  /= max;
+                rbPower /= max;
+                rfPower /= max;
             }
 
+            // Set drive motor power
             LB.setPower(lbPower);
             LF.setPower(lfPower);
             RB.setPower(rbPower);
             RF.setPower(rfPower);
 
-            telemetry.addData("Status", "Run Time: "+runtime.toString());
-            telemetry.addData("Front left/Right", JavaUtil.formatNumber(lfPower, 4, 2)+", "+JavaUtil.formatNumber(rfPower, 4, 2));
-            telemetry.addData("Back left/Right", JavaUtil.formatNumber(lbPower, 4, 2)+", "+JavaUtil.formatNumber(rbPower, 4, 2));
+            // Telemetry (Driver Station + Dashboard)
+            telemetry.addData("Status", "Run Time: " + runtime);
+            telemetry.addData("Front L/R", "%.2f, %.2f", lfPower, rfPower);
+            telemetry.addData("Back L/R", "%.2f, %.2f", lbPower, rbPower);
             telemetry.update();
+
+            dashboard.getTelemetry().addData("Front L/R", "%.2f, %.2f", lfPower, rfPower);
+            dashboard.getTelemetry().addData("Back L/R", "%.2f, %.2f", lbPower, rbPower);
+            dashboard.getTelemetry().update();
         }
     }
-    private void brakes(){
-        if (gamepad1.left_bumper && gamepad1.right_bumper){
+
+    // Stop all motors if both bumpers pressed
+    private void brakes() {
+        if (gamepad1.left_bumper && gamepad1.right_bumper) {
             LB.setPower(0);
             LF.setPower(0);
             RB.setPower(0);
             RF.setPower(0);
-            LS.setPower(0);
-            RS.setPower(0);
+            LSX.setPower(0);
+            RSX.setPower(0);
             Intake.setPower(0);
         }
     }
-    /*private void shooter(){//shooter
-        LS.setPower(gamepad1.right_trigger);
-        RS.setPower(gamepad1.right_trigger);
-    }*/
-    private void shooterEx(){//shooter with setVelocity();
-        if (gamepad1.right_trigger>0) {
+
+    // Shooter control (right trigger)
+    private void shooterEx() {
+        if (gamepad1.right_trigger > 0) {
             LSX.setVelocity(SHOOTER_VELOCITY);
             RSX.setVelocity(SHOOTER_VELOCITY);
-        }
-        else{
+        } else {
             LSX.setVelocity(0);
             RSX.setVelocity(0);
         }
     }
-    private void intake(){
-        if (gamepad1.left_trigger >0)//in
+
+    // Intake control (left trigger or bumper)
+    private void intake() {
+        if (gamepad1.left_trigger > 0)
             Intake.setPower(-1);
-        else if (gamepad1.left_bumper)//out
+        else if (gamepad1.left_bumper)
             Intake.setPower(1);
         else
             Intake.setPower(0);
     }
 
-    private void test(boolean trial){
-        while (trial) {
+    // Test mode to individually activate motors
+    private void test(boolean trial) {
+        while (trial && opModeIsActive()) {
             if (gamepad1.dpad_left) {
                 LB.setPower(0.25);
-                LF.setPower(0);
-                RB.setPower(0);
-                RF.setPower(0);
-                LS.setPower(0);
-                RS.setPower(0);
-                Intake.setPower(0);
-            }
-            else if (gamepad1.dpad_up) {
-                LB.setPower(0);
+            } else if (gamepad1.dpad_up) {
                 LF.setPower(0.25);
-                RB.setPower(0);
-                RF.setPower(0);
-                LS.setPower(0);
-                RS.setPower(0);
-                Intake.setPower(0);
-            }
-            else if (gamepad1.dpad_right) {
-                LB.setPower(0);
-                LF.setPower(0);
+            } else if (gamepad1.dpad_right) {
                 RB.setPower(0.25);
-                RF.setPower(0);
-                LS.setPower(0);
-                RS.setPower(0);
-                Intake.setPower(0);
-            }
-            else if (gamepad1.dpad_down) {
-                LB.setPower(0);
-                LF.setPower(0);
-                RB.setPower(0);
+            } else if (gamepad1.dpad_down) {
                 RF.setPower(0.25);
-                LS.setPower(0);
-                RS.setPower(0);
-                Intake.setPower(0);
-            }
-            else if (gamepad1.y) {
+            } else if (gamepad1.y) {
+                // Stop test
                 LB.setPower(0);
                 LF.setPower(0);
                 RB.setPower(0);
                 RF.setPower(0);
-                LS.setPower(0);
-                RS.setPower(0);
-                Intake.setPower(0);
                 trial = false;
+                break;
+            } else {
+                LB.setPower(0);
+                LF.setPower(0);
+                RB.setPower(0);
+                RF.setPower(0);
             }
+            idle();
         }
     }
 }
