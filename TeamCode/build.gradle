@@ -7,7 +7,7 @@
 // the build definitions, you can place those customizations in this file, but
 // please think carefully as to whether such customizations are really necessary
 // before doing so.
-
+//
 
 // Custom definitions may go here
 
@@ -25,4 +25,5 @@ android {
 
 dependencies {
     implementation project(':FtcRobotController')
+    implementation 'com.acmerobotics.dashboard:dashboard:0.4.8'
 }
