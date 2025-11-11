@@ -10,9 +10,7 @@ import org.firstinspires.ftc.robotcore.external.JavaUtil;
 
 @TeleOp(name = "LegoNinjago")
 public class LegoNinjago extends LinearOpMode{
-    //FtcDashboard dashboard = FtcDashboard.getInstance();
-    //public static double currentMotorSpeed = 2000;
-    //motors
+
     private DcMotor LB; //0C
     private DcMotor LF; //1C
     private DcMotor RB; //2C
