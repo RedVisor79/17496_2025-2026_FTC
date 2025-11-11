@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -19,7 +20,7 @@ public class LegoNinjago extends LinearOpMode {
     private DcMotor RF; // 3C
     private DcMotorEx LSX; // 0E
     private DcMotorEx RSX; // 1E
-    private DcMotor Intake; // 2E
+    private DcMotorEx IntakeEx; // 2E
 
     // Drive power values
     double lbPower;
@@ -28,7 +29,8 @@ public class LegoNinjago extends LinearOpMode {
     double rfPower;
 
     // Shooter velocity (tunable in FTC Dashboard)
-    public static double SHOOTER_VELOCITY = 1700.0;
+    public static double SHOOTER_VELOCITY = 1550;
+    public static double INTAKE_VELOCITY = 1500;
 
     @Override
     public void runOpMode() {
@@ -42,7 +44,7 @@ public class LegoNinjago extends LinearOpMode {
         RF = hardwareMap.get(DcMotor.class, "RF");
         LSX = hardwareMap.get(DcMotorEx.class, "LS");
         RSX = hardwareMap.get(DcMotorEx.class, "RS");
-        Intake = hardwareMap.get(DcMotor.class, "Intake");
+        IntakeEx = hardwareMap.get(DcMotorEx.class, "Intake");
 
         // Motor directions
         LB.setDirection(DcMotor.Direction.FORWARD);
@@ -51,6 +53,7 @@ public class LegoNinjago extends LinearOpMode {
         RB.setDirection(DcMotor.Direction.FORWARD);
         LSX.setDirection(DcMotorEx.Direction.REVERSE);
         RSX.setDirection(DcMotorEx.Direction.FORWARD);
+        IntakeEx.setDirection(DcMotorEx.Direction.REVERSE);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -118,7 +121,7 @@ public class LegoNinjago extends LinearOpMode {
             RF.setPower(0);
             LSX.setPower(0);
             RSX.setPower(0);
-            Intake.setPower(0);
+            IntakeEx.setPower(0);
         }
     }
 
@@ -136,11 +139,11 @@ public class LegoNinjago extends LinearOpMode {
     // Intake control (left trigger or bumper)
     private void intake() {
         if (gamepad1.left_trigger > 0)
-            Intake.setPower(-1);
+            IntakeEx.setVelocity(INTAKE_VELOCITY);
         else if (gamepad1.left_bumper)
-            Intake.setPower(1);
+            IntakeEx.setVelocity(-INTAKE_VELOCITY);
         else
-            Intake.setPower(0);
+            IntakeEx.setVelocity(0);
     }
 
     // Test mode to individually activate motors
