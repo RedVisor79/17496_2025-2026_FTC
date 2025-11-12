@@ -28,8 +28,13 @@ public class LegoNinjago extends LinearOpMode {
     double rbPower;
     double rfPower;
 
+    double velocity;
+
     // Shooter velocity (tunable in FTC Dashboard)
-    public static double SHOOTER_VELOCITY = 1550;
+    public static double SHOOTER_VELOCITY1 = 1500;
+    public static double SHOOTER_VELOCITY2 = 1400;
+    public static double SHOOTER_VELOCITY3 = 1300;
+    public static double SHOOTER_VELOCITY4 = 1000;
     public static double INTAKE_VELOCITY = 1500;
 
     @Override
@@ -104,6 +109,7 @@ public class LegoNinjago extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime);
             telemetry.addData("Front L/R", "%.2f, %.2f", lfPower, rfPower);
             telemetry.addData("Back L/R", "%.2f, %.2f", lbPower, rbPower);
+            telemetry.addData("Shooter Velocity:", +velocity);
             telemetry.update();
 
             dashboard.getTelemetry().addData("Front L/R", "%.2f, %.2f", lfPower, rfPower);
@@ -127,9 +133,19 @@ public class LegoNinjago extends LinearOpMode {
 
     // Shooter control (right trigger)
     private void shooterEx() {
+
+        if (gamepad1.dpad_up)
+            velocity = SHOOTER_VELOCITY1;
+        if (gamepad1.dpad_left)
+            velocity = SHOOTER_VELOCITY2;
+        if (gamepad1.dpad_right)
+            velocity = SHOOTER_VELOCITY3;
+        if (gamepad1.dpad_down)
+            velocity = SHOOTER_VELOCITY4;
+
         if (gamepad1.right_trigger > 0) {
-            LSX.setVelocity(SHOOTER_VELOCITY);
-            RSX.setVelocity(SHOOTER_VELOCITY);
+            LSX.setVelocity(velocity);
+            RSX.setVelocity(velocity);
         } else {
             LSX.setVelocity(0);
             RSX.setVelocity(0);
