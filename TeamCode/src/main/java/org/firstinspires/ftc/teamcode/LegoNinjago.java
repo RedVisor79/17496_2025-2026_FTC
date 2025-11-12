@@ -109,7 +109,7 @@ public class LegoNinjago extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime);
             telemetry.addData("Front L/R", "%.2f, %.2f", lfPower, rfPower);
             telemetry.addData("Back L/R", "%.2f, %.2f", lbPower, rbPower);
-            telemetry.addData("Shooter Velocity:", +velocity);
+            telemetry.addData("Shooter Velocity:", velocity);
             telemetry.update();
 
             dashboard.getTelemetry().addData("Front L/R", "%.2f, %.2f", lfPower, rfPower);
