@@ -31,11 +31,11 @@ public class LegoNinjago extends LinearOpMode {
     double velocity;
 
     // Shooter velocity (tunable in FTC Dashboard)
-    public static double SHOOTER_VELOCITY1 = 1500;
+    public static double SHOOTER_VELOCITY1 = 1700;
     public static double SHOOTER_VELOCITY2 = 1400;
-    public static double SHOOTER_VELOCITY3 = 1300;
-    public static double SHOOTER_VELOCITY4 = 1000;
-    public static double INTAKE_VELOCITY = 1500;
+    public static double SHOOTER_VELOCITY3 = 1600;
+    public static double SHOOTER_VELOCITY4 = 1500;
+    public static double INTAKE_VELOCITY = 1000;
 
     @Override
     public void runOpMode() {
