@@ -28,7 +28,7 @@ public class LegoNinjago extends LinearOpMode {
     double rbPower;
     double rfPower;
 
-    double velocity;
+    double velocity=0;
 
     // Shooter velocity (tunable in FTC Dashboard)
     public static double SHOOTER_VELOCITY1 = 1700;
