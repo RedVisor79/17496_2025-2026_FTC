@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -70,13 +69,6 @@ public class LegoNinjago extends LinearOpMode {
             shooterEx();
             intake();
             brakes();
-
-            // Test mode (Y button)
-            boolean trial = false;
-            if (gamepad1.y) {
-                trial = true;
-                test(trial);
-            }
 
             // Mecanum drive calculations
             double forward = -gamepad1.left_stick_y;
@@ -163,31 +155,5 @@ public class LegoNinjago extends LinearOpMode {
     }
 
     // Test mode to individually activate motors
-    private void test(boolean trial) {
-        while (trial && opModeIsActive()) {
-            if (gamepad1.dpad_left) {
-                LB.setPower(0.25);
-            } else if (gamepad1.dpad_up) {
-                LF.setPower(0.25);
-            } else if (gamepad1.dpad_right) {
-                RB.setPower(0.25);
-            } else if (gamepad1.dpad_down) {
-                RF.setPower(0.25);
-            } else if (gamepad1.y) {
-                // Stop test
-                LB.setPower(0);
-                LF.setPower(0);
-                RB.setPower(0);
-                RF.setPower(0);
-                trial = false;
-                break;
-            } else {
-                LB.setPower(0);
-                LF.setPower(0);
-                RB.setPower(0);
-                RF.setPower(0);
-            }
-            idle();
-        }
-    }
+
 }
