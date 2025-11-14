@@ -45,15 +45,16 @@ public class AprilTag {
 
         // Build the AprilTag processor
         aprilTag = new AprilTagProcessor.Builder().build();
+        aprilTag.setDecimation(1);    // show on FTC Dashboard
 
         // Open camera and start vision with locked resolution
         visionPortal = new VisionPortal.Builder()
                 .setCamera(hwMap.get(WebcamName.class, "Webcam 1"))
                 .setCameraResolution(new Size(CAMERA_WIDTH, CAMERA_HEIGHT))
                 .addProcessor(aprilTag)
-                .enableLiveView(true)  // show on FTC Dashboard
+                .enableLiveView(true)
+
                 .build();
-        FtcDashboard.getInstance().startCameraStream(visionPortal, 30);
     }
 
     public void update() {
