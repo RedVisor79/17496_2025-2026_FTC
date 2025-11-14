@@ -69,7 +69,7 @@ public class Clanker extends LinearOpMode {
             shooterEx(1);
             sleep(1500);
             intake(1);
-            sleep(5000);
+            sleep(3000);
             shooterEx(0);
             intake(0);
             move(1, 0, 0);
@@ -84,7 +84,7 @@ public class Clanker extends LinearOpMode {
         //double strafe = gamepad1.left_stick_x;
         //double turn = gamepad1.right_stick_x;
 
-        forward = -forward;
+        //forward = -forward;
 
         lbPower = forward - strafe + turn;
         lfPower = forward + strafe + turn;

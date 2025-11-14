@@ -15,8 +15,8 @@ public class AutoRed extends LinearOpMode {
     private DcMotorEx LSX, RSX, IntakeEx;
 
     // Constants
-    private static final double DRIVE_FWD = 0.75;
-    private static final double DRIVE_TURN = .75;
+    private static final double DRIVE_FWD = 0.85;
+    private static final double DRIVE_TURN = 0.85;
     private static final double SHOOTER_RPM = 1350;
     private static final double INTAKE_RPM1 = 1300;
     private static final double INTAKE_RPM2 = 1000;
@@ -57,7 +57,7 @@ public class AutoRed extends LinearOpMode {
         // ---------------------------------------------------------------------
         // Your previous 80° turn was 700ms
         // Scale factor: 150 / 80 = 1.875 → 700 * 1.875 = 1312 ms
-        drive(DRIVE_TURN, DRIVE_TURN, -DRIVE_TURN, -DRIVE_TURN, 1140);
+        drive(DRIVE_TURN, DRIVE_TURN, -DRIVE_TURN, -DRIVE_TURN, 1100);
 
         // ---------------------------------------------------------------------
         // 3️⃣ Spin SHOOTER UP (1400 RPM) for 1 sec
