@@ -134,4 +134,26 @@ public class AprilTag {
     public VisionPortal getCamera() {
         return visionPortal;
     }
+    public String getHorizontalPosition(AprilTagDetection detection) {
+        double centerX = detection.center.x;
+        double midpoint = CAMERA_WIDTH / 2.0;
+
+        if (centerX < midpoint - 20) {        // 20px deadband
+            return "LEFT";
+        } else if (centerX > midpoint + 20) {
+            return "RIGHT";
+        } else {
+            return "CENTERED";
+        }
+    }
+
+    /** Returns horizontal offset in pixels (positive = right, negative = left) */
+    public double getPixelOffset(AprilTagDetection detection) {
+        double centerX = detection.center.x;
+        double midpoint = CAMERA_WIDTH / 2.0;
+        return centerX - midpoint;
+    }
+
+
+
 }
