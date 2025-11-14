@@ -11,7 +11,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
-@Autonomous(name = "Clanker")
+@Autonomous(name = "Clanker", group = "Linear OpMode")
 public class Clanker extends LinearOpMode {
 
     private DcMotor LB; // 0C
@@ -37,8 +37,7 @@ public class Clanker extends LinearOpMode {
     public static double SHOOTER_VELOCITY4 = 1500;
     public static double INTAKE_VELOCITY = 1000;
 
-    @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
         ElapsedTime runtime = new ElapsedTime();
         FtcDashboard dashboard = FtcDashboard.getInstance();
 
@@ -62,31 +61,20 @@ public class Clanker extends LinearOpMode {
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+        // Telemetry (Driver Station + Dashboard)
+        startTelemetryLoop(dashboard, runtime);
 
         waitForStart();
-        runtime.reset();
-
-        while (opModeIsActive()) {
-            for (int i =1;i==1;i++) {
-                shooterEx(1);
-                sleep(1500);
-                intake(1);
-                sleep(5000);
-                move(1, 0, 0);
-                sleep(5000);
-                move(0,0,0);
-            }
-
-            // Telemetry (Driver Station + Dashboard)
-            telemetry.addData("Status", "Run Time: " + runtime);
-            telemetry.addData("Front L/R", "%.2f, %.2f", lfPower, rfPower);
-            telemetry.addData("Back L/R", "%.2f, %.2f", lbPower, rbPower);
-            telemetry.addData("Shooter Velocity:", velocity);
-            telemetry.update();
-
-            dashboard.getTelemetry().addData("Front L/R", "%.2f, %.2f", lfPower, rfPower);
-            dashboard.getTelemetry().addData("Back L/R", "%.2f, %.2f", lbPower, rbPower);
-            dashboard.getTelemetry().update();
+        if (!isStopRequested()) {
+            shooterEx(1);
+            sleep(1500);
+            intake(1);
+            sleep(5000);
+            shooterEx(0);
+            intake(0);
+            move(1, 0, 0);
+            sleep(5000);
+            move(0,0,0);
         }
     }
 
@@ -127,11 +115,11 @@ public class Clanker extends LinearOpMode {
 
         if (velVal == 1)
             velocity = SHOOTER_VELOCITY1;
-        if (velVal == 2)
+        else if (velVal == 2)
             velocity = SHOOTER_VELOCITY2;
-        if (velVal == 3)
+        else if (velVal == 3)
             velocity = SHOOTER_VELOCITY3;
-        if (velVal == 4)
+        else if (velVal == 4)
             velocity = SHOOTER_VELOCITY4;
         else
             velocity = 0;
@@ -151,6 +139,27 @@ public class Clanker extends LinearOpMode {
             IntakeEx.setVelocity(0);
     }
 
-    // Test mode to individually activate motors
+    private void startTelemetryLoop(FtcDashboard dashboard, ElapsedTime runtime) {
+        Thread telemetryThread = new Thread(() -> {
+            while (!isStopRequested()) {
+                telemetry.addData("Status", "Run Time: " + runtime.toString());
+                telemetry.addData("Front L/R", "%.2f, %.2f", lfPower, rfPower);
+                telemetry.addData("Back L/R", "%.2f, %.2f", lbPower, rbPower);
+                telemetry.addData("Shooter Velocity", velocity);
+                telemetry.update();
 
+                dashboard.getTelemetry().addData("Front L/R", "%.2f, %.2f", lfPower, rfPower);
+                dashboard.getTelemetry().addData("Back L/R", "%.2f, %.2f", lbPower, rbPower);
+                dashboard.getTelemetry().addData("Shooter Velocity", velocity);
+                dashboard.getTelemetry().update();
+
+                try {
+                    Thread.sleep(100); // Update every 100ms
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        });
+        telemetryThread.start();
+    }
 }
