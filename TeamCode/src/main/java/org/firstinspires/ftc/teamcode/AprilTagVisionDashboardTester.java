@@ -24,7 +24,7 @@ public class AprilTagVisionDashboardTester extends LinearOpMode {
         telemetry.addLine("Press PLAY to begin testing");
         telemetry.update();
 
-        // waitForStart();
+        waitForStart();
 
 
 

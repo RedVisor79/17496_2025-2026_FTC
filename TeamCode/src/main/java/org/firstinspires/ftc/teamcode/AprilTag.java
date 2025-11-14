@@ -49,7 +49,7 @@ public class AprilTag {
 
         // Open camera and start vision with locked resolution
         visionPortal = new VisionPortal.Builder()
-                .setCamera(hwMap.get(WebcamName.class, "Webcam 1"))
+                .setCamera(hwMap.get(WebcamName.class, "Webcam"))
                 .setCameraResolution(new Size(CAMERA_WIDTH, CAMERA_HEIGHT))
                 .addProcessor(aprilTag)
                 .enableLiveView(true)
