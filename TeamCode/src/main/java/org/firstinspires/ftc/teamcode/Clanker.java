@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,8 +11,8 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
-@TeleOp(name = "LegoNinjago")
-public class LegoNinjago extends LinearOpMode {
+@Autonomous(name = "Clanker")
+public class Clanker extends LinearOpMode {
 
     private DcMotor LB; // 0C
     private DcMotor LF; // 1C
@@ -66,35 +67,15 @@ public class LegoNinjago extends LinearOpMode {
         runtime.reset();
 
         while (opModeIsActive()) {
-            shooterEx();
-            intake();
-
-            // Mecanum drive calculations
-            double forward = -gamepad1.left_stick_y;
-            double strafe = gamepad1.left_stick_x;
-            double turn = gamepad1.right_stick_x;
-
-            lbPower = forward - strafe + turn;
-            lfPower = forward + strafe + turn;
-            rbPower = forward + strafe - turn;
-            rfPower = forward - strafe - turn;
-
-            // Normalize
-            double max = Math.max(Math.max(Math.abs(lfPower), Math.abs(rfPower)),
-                    Math.max(Math.abs(lbPower), Math.abs(rbPower)));
-
-            if (max > 1.0) {
-                lbPower /= max;
-                lfPower /= max;
-                rbPower /= max;
-                rfPower /= max;
+            for (int i =1;i==1;i++) {
+                shooterEx(1);
+                sleep(1500);
+                intake(1);
+                sleep(5000);
+                move(1, 0, 0);
+                sleep(5000);
+                move(0,0,0);
             }
-
-            // Set drive motor power
-            LB.setPower(lbPower);
-            LF.setPower(lfPower);
-            RB.setPower(rbPower);
-            RF.setPower(rfPower);
 
             // Telemetry (Driver Station + Dashboard)
             telemetry.addData("Status", "Run Time: " + runtime);
@@ -109,32 +90,62 @@ public class LegoNinjago extends LinearOpMode {
         }
     }
 
-    // Shooter control (right trigger)
-    private void shooterEx() {
+    private void move(double forward, double strafe, double turn){
+        // Mecanum drive calculations
+        //double forward = -gamepad1.left_stick_y;
+        //double strafe = gamepad1.left_stick_x;
+        //double turn = gamepad1.right_stick_x;
 
-        if (gamepad1.dpad_up)
-            velocity = SHOOTER_VELOCITY1;
-        if (gamepad1.dpad_left)
-            velocity = SHOOTER_VELOCITY2;
-        if (gamepad1.dpad_right)
-            velocity = SHOOTER_VELOCITY3;
-        if (gamepad1.dpad_down)
-            velocity = SHOOTER_VELOCITY4;
+        forward = -forward;
 
-        if (gamepad1.right_trigger > 0) {
-            LSX.setVelocity(velocity);
-            RSX.setVelocity(-velocity);
-        } else {
-            LSX.setVelocity(0);
-            RSX.setVelocity(0);
+        lbPower = forward - strafe + turn;
+        lfPower = forward + strafe + turn;
+        rbPower = forward + strafe - turn;
+        rfPower = forward - strafe - turn;
+
+        // Normalize
+        double max = Math.max(Math.max(Math.abs(lfPower), Math.abs(rfPower)),
+                Math.max(Math.abs(lbPower), Math.abs(rbPower)));
+
+        if (max > 1.0) {
+            lbPower /= max;
+            lfPower /= max;
+            rbPower /= max;
+            rfPower /= max;
         }
+
+        // Set drive motor power
+        LB.setPower(lbPower);
+        LF.setPower(lfPower);
+        RB.setPower(rbPower);
+        RF.setPower(rfPower);
+
+    }
+
+    // Shooter control (right trigger)
+    private void shooterEx(int velVal) {
+
+        if (velVal == 1)
+            velocity = SHOOTER_VELOCITY1;
+        if (velVal == 2)
+            velocity = SHOOTER_VELOCITY2;
+        if (velVal == 3)
+            velocity = SHOOTER_VELOCITY3;
+        if (velVal == 4)
+            velocity = SHOOTER_VELOCITY4;
+        else
+            velocity = 0;
+
+        LSX.setVelocity(velocity);
+        RSX.setVelocity(velocity);
+
     }
 
     // Intake control (left trigger or bumper)
-    private void intake() {
-        if (gamepad1.left_trigger > 0)
+    private void intake(int i) {
+        if (i ==1)
             IntakeEx.setVelocity(INTAKE_VELOCITY);
-        else if (gamepad1.left_bumper)
+        else if (i ==2 )
             IntakeEx.setVelocity(-INTAKE_VELOCITY);
         else
             IntakeEx.setVelocity(0);
