@@ -14,6 +14,7 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 
 import java.util.List;
 
@@ -58,20 +59,32 @@ public class AprilTag {
     public void update() {
         currentDetections = aprilTag.getDetections();
 
+        // Reset labels every update
+        goalLabel = "None";
+        patternLabel = "None";
+
         if (currentDetections != null && !currentDetections.isEmpty()) {
+
             AprilTagDetection detection = currentDetections.get(0);
 
-            // Assign label based on ID
             switch (detection.id) {
-                case 20: goalLabel = "blueGoal"; break;
-                case 21: patternLabel = "GPP"; break;
-                case 22: patternLabel = "PGP"; break;
-                case 23: patternLabel = "PPG"; break;
-                case 24: goalLabel = "redGoal"; break;
-                default: goalLabel = "None"; break;
+                case 20:
+                    goalLabel = "blueGoal";
+                    break;
+                case 24:
+                    goalLabel = "redGoal";
+                    break;
+
+                case 21:
+                    patternLabel = "GPP";
+                    break;
+                case 22:
+                    patternLabel = "PGP";
+                    break;
+                case 23:
+                    patternLabel = "PPG";
+                    break;
             }
-        } else {
-            goalLabel = "None";
         }
     }
 
@@ -95,6 +108,36 @@ public class AprilTag {
         } else {
             telemetry.addLine("No AprilTags detected");
         }
+    }
+
+    //for FTC dashboard telemetry
+    public void addDashboardTelemetry(AprilTagDetection detection) {
+        TelemetryPacket packet = new TelemetryPacket();
+
+        if (detection != null) {
+
+            double offset = getPixelOffset(detection);
+            double distance = getDistanceInches(detection);
+
+            packet.put("Tag ID", detection.id);
+            packet.put("Goal Label", goalLabel);
+            packet.put("Pattern Label", patternLabel);
+            packet.put("Pixel Offset (px)", offset);
+            packet.put("Distance (in)", distance);
+
+            if (detection.rawPose != null) {
+                packet.put("Raw X (m)", detection.rawPose.x);
+                packet.put("Raw Y (m)", detection.rawPose.y);
+                packet.put("Raw Z (m)", detection.rawPose.z);
+            } else {
+                packet.put("Raw Pose", "null");
+            }
+
+        } else {
+            packet.put("Tag", "NO DETECTION");
+        }
+
+        FtcDashboard.getInstance().sendTelemetryPacket(packet);
     }
 
     /** Returns the first detection, or null if none */
