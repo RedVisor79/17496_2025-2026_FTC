@@ -17,7 +17,7 @@ public class TriangleAuto extends LinearOpMode {
     // Constants
     private static final double DRIVE_FWD = 0.75;
     private static final double DRIVE_TURN = .75;
-    private static final double SHOOTER_RPM = 1550;
+    private static final double SHOOTER_RPM = 1650;
     private static final double INTAKE_RPM = 1000;
 
     @Override
@@ -49,14 +49,14 @@ public class TriangleAuto extends LinearOpMode {
         // 1️⃣ DRIVE FORWARD ~5.5 ft
         // ---------------------------------------------------------------------
         // Previously 950ms for ~2.5 ft → scale by 5.5 / 2.5 = 2.2x
-        drive(DRIVE_FWD, DRIVE_FWD, DRIVE_FWD, DRIVE_FWD, 100);
+        drive(DRIVE_FWD, DRIVE_FWD, DRIVE_FWD, DRIVE_FWD, 150);
 
         // ---------------------------------------------------------------------
         // 2️⃣ CLOCKWISE TURN ~150°
         // ---------------------------------------------------------------------
         // Your previous 80° turn was 700ms
         // Scale factor: 150 / 80 = 1.875 → 700 * 1.875 = 1312 ms
-        drive(DRIVE_TURN, DRIVE_TURN, -DRIVE_TURN, -DRIVE_TURN, 600);
+        drive(DRIVE_TURN, DRIVE_TURN, -DRIVE_TURN, -DRIVE_TURN, 85);
 
         // ---------------------------------------------------------------------
         // 3️⃣ Spin SHOOTER UP (1400 RPM) for 1 sec
