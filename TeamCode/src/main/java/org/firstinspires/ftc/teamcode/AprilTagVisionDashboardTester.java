@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -24,6 +25,9 @@ public class AprilTagVisionDashboardTester extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
+
+
+
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
