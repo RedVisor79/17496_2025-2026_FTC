@@ -24,9 +24,9 @@ public class AprilTagVisionDashboardTester extends LinearOpMode {
         telemetry.addLine("Press PLAY to begin testing");
         telemetry.update();
 
-        waitForStart();
+        // waitForStart();
 
-        FtcDashboard.getInstance().startCameraStream(visionPortal, 30);
+
 
         if (isStopRequested()) return;
 

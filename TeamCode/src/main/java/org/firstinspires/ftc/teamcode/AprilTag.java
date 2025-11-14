@@ -55,6 +55,8 @@ public class AprilTag {
                 .enableLiveView(true)
 
                 .build();
+
+        FtcDashboard.getInstance().startCameraStream(visionPortal, 30);
     }
 
     public void update() {
