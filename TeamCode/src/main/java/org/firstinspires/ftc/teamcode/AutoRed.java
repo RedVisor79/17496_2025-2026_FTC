@@ -19,7 +19,7 @@ public class AutoRed extends LinearOpMode {
     private static final double DRIVE_TURN = 0.85;
     private static final double SHOOTER_RPM = 1350;
     private static final double INTAKE_RPM1 = 1300;
-    private static final double INTAKE_RPM2 = 1000;
+    private static final double INTAKE_RPM2 = 800;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -50,14 +50,14 @@ public class AutoRed extends LinearOpMode {
         // 1️⃣ DRIVE FORWARD ~5.5 ft
         // ---------------------------------------------------------------------
         // Previously 950ms for ~2.5 ft → scale by 5.5 / 2.5 = 2.2x
-        drive(DRIVE_FWD, DRIVE_FWD, DRIVE_FWD, DRIVE_FWD, 1200);
+        drive(DRIVE_FWD, DRIVE_FWD, DRIVE_FWD, DRIVE_FWD, 1000);
 
         // ---------------------------------------------------------------------
         // 2️⃣ CLOCKWISE TURN ~150°
         // ---------------------------------------------------------------------
         // Your previous 80° turn was 700ms
         // Scale factor: 150 / 80 = 1.875 → 700 * 1.875 = 1312 ms
-        drive(DRIVE_TURN, DRIVE_TURN, -DRIVE_TURN, -DRIVE_TURN, 1100);
+        drive(DRIVE_TURN, DRIVE_TURN, -DRIVE_TURN, -DRIVE_TURN, 900);
 
         // ---------------------------------------------------------------------
         // 3️⃣ Spin SHOOTER UP (1400 RPM) for 1 sec
