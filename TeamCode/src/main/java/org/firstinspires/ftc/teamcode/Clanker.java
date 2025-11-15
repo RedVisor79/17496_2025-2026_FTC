@@ -73,7 +73,7 @@ public class Clanker extends LinearOpMode {
             shooterEx(0);
             intake(0);
             move(1, 0, 0);
-            sleep(5000);
+            sleep(1300);
             move(0,0,0);
         }
     }

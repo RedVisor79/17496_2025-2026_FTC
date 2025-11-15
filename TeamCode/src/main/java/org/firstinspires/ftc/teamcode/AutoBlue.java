@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-@Autonomous(name = "TriangleAuto", group = "Linear OpMode")
-public class TriangleAuto extends LinearOpMode {
+@Autonomous(name = "AutoBlue", group = "Linear OpMode")
+public class AutoBlue extends LinearOpMode {
 
     // Drive motors
     private DcMotor LB, LF, RB, RF;
@@ -15,10 +15,11 @@ public class TriangleAuto extends LinearOpMode {
     private DcMotorEx LSX, RSX, IntakeEx;
 
     // Constants
-    private static final double DRIVE_FWD = 0.75;
-    private static final double DRIVE_TURN = .75;
-    private static final double SHOOTER_RPM = 1795;
-    private static final double INTAKE_RPM = 1000;
+    private static final double DRIVE_FWD = 0.85;
+    private static final double DRIVE_TURN = 0.85;
+    private static final double SHOOTER_RPM = 1350;
+    private static final double INTAKE_RPM1 = 1300;
+    private static final double INTAKE_RPM2 = 800;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -49,30 +50,32 @@ public class TriangleAuto extends LinearOpMode {
         // 1️⃣ DRIVE FORWARD ~5.5 ft
         // ---------------------------------------------------------------------
         // Previously 950ms for ~2.5 ft → scale by 5.5 / 2.5 = 2.2x
-        drive(DRIVE_FWD, DRIVE_FWD, DRIVE_FWD, DRIVE_FWD, 150);
+        drive(DRIVE_FWD, DRIVE_FWD, DRIVE_FWD, DRIVE_FWD, 1000);
 
         // ---------------------------------------------------------------------
         // 2️⃣ CLOCKWISE TURN ~150°
         // ---------------------------------------------------------------------
         // Your previous 80° turn was 700ms
         // Scale factor: 150 / 80 = 1.875 → 700 * 1.875 = 1312 ms
-        drive(DRIVE_TURN, DRIVE_TURN, -DRIVE_TURN, -DRIVE_TURN, 132);
+        drive(-DRIVE_TURN, -DRIVE_TURN, DRIVE_TURN, DRIVE_TURN, 900);
 
         // ---------------------------------------------------------------------
         // 3️⃣ Spin SHOOTER UP (1400 RPM) for 1 sec
         // ---------------------------------------------------------------------
         LSX.setVelocity(SHOOTER_RPM);
         RSX.setVelocity(SHOOTER_RPM);
-        sleep(1000);
+        sleep(3000);
 
         // ---------------------------------------------------------------------
         // 4️⃣ Run INTAKE for 3 sec WHILE shooter stays running
         // ---------------------------------------------------------------------
-        IntakeEx.setVelocity(INTAKE_RPM);
-        sleep(3000);
-
-        // Stop intake
+        IntakeEx.setVelocity(INTAKE_RPM1);
+        sleep(1500);
         IntakeEx.setVelocity(0);
+        IntakeEx.setVelocity(INTAKE_RPM2);
+        sleep(1500);
+        IntakeEx.setVelocity(0);
+
 
         // ---------------------------------------------------------------------
         // 5️⃣ Stop Shooter
