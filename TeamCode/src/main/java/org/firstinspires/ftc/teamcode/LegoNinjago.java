@@ -30,10 +30,7 @@ public class LegoNinjago extends LinearOpMode {
     double velocity=0;
 
     // Shooter velocity (tunable in FTC Dashboard)
-    public static double SHOOTER_VELOCITY1 = 1700;
-    public static double SHOOTER_VELOCITY2 = 1400;
-    public static double SHOOTER_VELOCITY3 = 1600;
-    public static double SHOOTER_VELOCITY4 = 1500;
+    public static double SHOOTER_VELOCITY = 1500;
     public static double INTAKE_VELOCITY = 1000;
 
     @Override
@@ -117,14 +114,10 @@ public class LegoNinjago extends LinearOpMode {
     // Shooter control (right trigger)
     private void shooterEx() {
 
-        if (gamepad1.dpad_up)
-            velocity = SHOOTER_VELOCITY1;
-        if (gamepad1.dpad_left)
-            velocity = SHOOTER_VELOCITY2;
-        if (gamepad1.dpad_right)
-            velocity = SHOOTER_VELOCITY3;
-        if (gamepad1.dpad_down)
-            velocity = SHOOTER_VELOCITY4;
+        if (gamepad1.dpad_up&&SHOOTER_VELOCITY<=1800)
+            velocity = SHOOTER_VELOCITY+100;
+        if (gamepad1.dpad_down&&SHOOTER_VELOCITY>=1400)
+            velocity = SHOOTER_VELOCITY-100;
 
         if (gamepad1.right_trigger > 0) {
             LSX.setVelocity(velocity);
