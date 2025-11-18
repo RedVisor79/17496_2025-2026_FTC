@@ -101,11 +101,16 @@ public class LegoNinjago extends LinearOpMode {
             telemetry.addData("Front L/R", "%.2f, %.2f", lfPower, rfPower);
             telemetry.addData("Back L/R", "%.2f, %.2f", lbPower, rbPower);
             telemetry.addData("Shooter Velocity:", velocity);
+            telemetry.addData("Intake:", INTAKE_VELOCITY);
+            telemetry.addData("LB:", lbPower);
+            telemetry.addData("LF:", lfPower);
+            telemetry.addData("RB:", rbPower);
+            telemetry.addData("RF:", rfPower);
+            telemetry.addData("Left Stick x:", gamepad1.left_stick_y);
+            telemetry.addData("Left Stick y:", gamepad1.left_stick_x);
+            telemetry.addData("Right Stick x:", gamepad1.right_stick_x);
+            telemetry.addData("Right Stick y:", gamepad1.right_stick_y);
             telemetry.update();
-
-            dashboard.getTelemetry().addData("Front L/R", "%.2f, %.2f", lfPower, rfPower);
-            dashboard.getTelemetry().addData("Back L/R", "%.2f, %.2f", lbPower, rbPower);
-            dashboard.getTelemetry().update();
         }
     }
 
