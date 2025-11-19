@@ -30,10 +30,7 @@ public class LegoNinjago extends LinearOpMode {
     double velocity=0;
 
     // Shooter velocity (tunable in FTC Dashboard)
-    public static double SHOOTER_VELOCITY1 = 1700;
-    public static double SHOOTER_VELOCITY2 = 1400;
-    public static double SHOOTER_VELOCITY3 = 1600;
-    public static double SHOOTER_VELOCITY4 = 1500;
+    public static double SHOOTER_VELOCITY = 1500;
     public static double INTAKE_VELOCITY = 1000;
 
     @Override
@@ -101,25 +98,26 @@ public class LegoNinjago extends LinearOpMode {
             telemetry.addData("Front L/R", "%.2f, %.2f", lfPower, rfPower);
             telemetry.addData("Back L/R", "%.2f, %.2f", lbPower, rbPower);
             telemetry.addData("Shooter Velocity:", velocity);
+            telemetry.addData("Intake:", INTAKE_VELOCITY);
+            telemetry.addData("LB:", lbPower);
+            telemetry.addData("LF:", lfPower);
+            telemetry.addData("RB:", rbPower);
+            telemetry.addData("RF:", rfPower);
+            telemetry.addData("Left Stick x:", gamepad1.left_stick_y);
+            telemetry.addData("Left Stick y:", gamepad1.left_stick_x);
+            telemetry.addData("Right Stick x:", gamepad1.right_stick_x);
+            telemetry.addData("Right Stick y:", gamepad1.right_stick_y);
             telemetry.update();
-
-            dashboard.getTelemetry().addData("Front L/R", "%.2f, %.2f", lfPower, rfPower);
-            dashboard.getTelemetry().addData("Back L/R", "%.2f, %.2f", lbPower, rbPower);
-            dashboard.getTelemetry().update();
         }
     }
 
     // Shooter control (right trigger)
     private void shooterEx() {
 
-        if (gamepad1.dpad_up)
-            velocity = SHOOTER_VELOCITY1;
-        if (gamepad1.dpad_left)
-            velocity = SHOOTER_VELOCITY2;
-        if (gamepad1.dpad_right)
-            velocity = SHOOTER_VELOCITY3;
-        if (gamepad1.dpad_down)
-            velocity = SHOOTER_VELOCITY4;
+        if (gamepad1.dpad_up&&SHOOTER_VELOCITY<=1800)
+            velocity = SHOOTER_VELOCITY+100;
+        if (gamepad1.dpad_down&&SHOOTER_VELOCITY>=1400)
+            velocity = SHOOTER_VELOCITY-100;
 
         if (gamepad1.right_trigger > 0) {
             LSX.setVelocity(velocity);
