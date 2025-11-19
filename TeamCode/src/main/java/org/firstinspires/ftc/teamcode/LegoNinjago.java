@@ -27,8 +27,6 @@ public class LegoNinjago extends LinearOpMode {
     double rbPower;
     double rfPower;
 
-    double velocity=0;
-
     // Shooter velocity (tunable in FTC Dashboard)
     public static double SHOOTER_VELOCITY = 1500;
     public static double INTAKE_VELOCITY = 1000;
@@ -97,7 +95,7 @@ public class LegoNinjago extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime);
             telemetry.addData("Front L/R", "%.2f, %.2f", lfPower, rfPower);
             telemetry.addData("Back L/R", "%.2f, %.2f", lbPower, rbPower);
-            telemetry.addData("Shooter Velocity:", velocity);
+            telemetry.addData("Shooter Velocity:", SHOOTER_VELOCITY);
             telemetry.addData("Intake:", INTAKE_VELOCITY);
             telemetry.addData("LB:", lbPower);
             telemetry.addData("LF:", lfPower);
@@ -114,14 +112,14 @@ public class LegoNinjago extends LinearOpMode {
     // Shooter control (right trigger)
     private void shooterEx() {
 
-        if (gamepad1.dpad_up&&SHOOTER_VELOCITY<=1800)
-            velocity = SHOOTER_VELOCITY+100;
-        if (gamepad1.dpad_down&&SHOOTER_VELOCITY>=1400)
-            velocity = SHOOTER_VELOCITY-100;
+        if (gamepad1.dpad_up)
+            SHOOTER_VELOCITY=1700;
+        if (gamepad1.dpad_down)
+            SHOOTER_VELOCITY=1400;
 
         if (gamepad1.right_trigger > 0) {
-            LSX.setVelocity(velocity);
-            RSX.setVelocity(velocity);
+            LSX.setVelocity(SHOOTER_VELOCITY);
+            RSX.setVelocity(SHOOTER_VELOCITY);
         } else {
             LSX.setVelocity(0);
             RSX.setVelocity(0);
@@ -130,9 +128,9 @@ public class LegoNinjago extends LinearOpMode {
 
     // Intake control (left trigger or bumper)
     private void intake() {
-        if (gamepad1.left_trigger > 0)
+        if (gamepad1.left_trigger > 0 || gamepad1.dpad_left)
             IntakeEx.setVelocity(INTAKE_VELOCITY);
-        else if (gamepad1.left_bumper)
+        else if (gamepad1.left_bumper||gamepad1.dpad_right)
             IntakeEx.setVelocity(-INTAKE_VELOCITY);
         else
             IntakeEx.setVelocity(0);
