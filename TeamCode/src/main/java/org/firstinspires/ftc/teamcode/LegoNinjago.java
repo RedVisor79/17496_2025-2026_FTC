@@ -66,12 +66,12 @@ public class LegoNinjago extends LinearOpMode {
 
             // Mecanum drive calculations
             double forward = -gamepad1.left_stick_y;
-            double strafe = gamepad1.left_stick_x;
+            double strafe = -gamepad1.left_stick_x;
             double turn = gamepad1.right_stick_x;
 
-            lbPower = forward - strafe + turn;
+            lbPower = forward - 0.5*strafe + turn;
             lfPower = forward + strafe + turn;
-            rbPower = forward + strafe - turn;
+            rbPower = forward + 0.5*strafe - turn;
             rfPower = forward - strafe - turn;
 
             // Normalize
@@ -93,14 +93,14 @@ public class LegoNinjago extends LinearOpMode {
 
             // Telemetry (Driver Station + Dashboard)
             telemetry.addData("Status", "Run Time: " + runtime);
-            telemetry.addData("Front L/R", "%.2f, %.2f", lfPower, rfPower);
-            telemetry.addData("Back L/R", "%.2f, %.2f", lbPower, rbPower);
+            telemetry.addData("Robot Values:","");
             telemetry.addData("Shooter Velocity:", SHOOTER_VELOCITY);
             telemetry.addData("Intake:", INTAKE_VELOCITY);
             telemetry.addData("LB:", lbPower);
             telemetry.addData("LF:", lfPower);
             telemetry.addData("RB:", rbPower);
             telemetry.addData("RF:", rfPower);
+            telemetry.addData("Input Data:","");
             telemetry.addData("Left Stick x:", gamepad1.left_stick_y);
             telemetry.addData("Left Stick y:", gamepad1.left_stick_x);
             telemetry.addData("Right Stick x:", gamepad1.right_stick_x);
