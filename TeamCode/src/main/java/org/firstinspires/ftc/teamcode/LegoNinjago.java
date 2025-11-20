@@ -29,7 +29,7 @@ public class LegoNinjago extends LinearOpMode {
 
     // Shooter velocity (tunable in FTC Dashboard)
     public static double SHOOTER_VELOCITY = 1500;
-    public static double INTAKE_VELOCITY = 1000;
+    public static double INTAKE_VELOCITY = 1500;
 
     @Override
     public void runOpMode() {
@@ -66,12 +66,12 @@ public class LegoNinjago extends LinearOpMode {
 
             // Mecanum drive calculations
             double forward = -gamepad1.left_stick_y;
-            double strafe = -gamepad1.left_stick_x;
+            double strafe = gamepad1.left_stick_x;
             double turn = gamepad1.right_stick_x;
 
-            lbPower = forward - 0.5*strafe + turn;
+            lbPower = forward - 0.65*strafe + turn;
             lfPower = forward + strafe + turn;
-            rbPower = forward + 0.5*strafe - turn;
+            rbPower = forward + 0.65*strafe - turn;
             rfPower = forward - strafe - turn;
 
             // Normalize
@@ -128,9 +128,9 @@ public class LegoNinjago extends LinearOpMode {
 
     // Intake control (left trigger or bumper)
     private void intake() {
-        if (gamepad1.left_trigger > 0 || gamepad1.dpad_left)
+        if (gamepad1.left_trigger > 0 || gamepad1.dpad_right)
             IntakeEx.setVelocity(INTAKE_VELOCITY);
-        else if (gamepad1.left_bumper||gamepad1.dpad_right)
+        else if (gamepad1.left_bumper||gamepad1.dpad_left)
             IntakeEx.setVelocity(-INTAKE_VELOCITY);
         else
             IntakeEx.setVelocity(0);
