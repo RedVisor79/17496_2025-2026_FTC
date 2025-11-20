@@ -85,17 +85,17 @@ public class AutoFarRED extends LinearOpMode {
                     telemetry.update();
 
                     break;
-                }
-                else {
+                } else {
                     drive(DRIVE_FWD, DRIVE_FWD, DRIVE_FWD, DRIVE_FWD);
                 }
-            }
-            else {
+            } else {
                 // Lost tag — stop driving to be safe
                 drive(0, 0, 0, 0);
             }
-            sleep(50);
+        }
 
+        sleep(50);
+        while (opModeIsActive()) {
             // Turn right until...
             if (tag != null) {
 
@@ -122,12 +122,11 @@ public class AutoFarRED extends LinearOpMode {
                 }
 
                 telemetry.update();
-            }
-            else {
+            } else {
                 // Fail-safe: no tag → stop
                 drive(0, 0, 0, 0);
             }
-
+        }
 
             // Telemetry
             vision.addTelemetry();
