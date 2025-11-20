@@ -15,9 +15,9 @@ public class TriangleAutoRed extends LinearOpMode {
     private DcMotorEx LSX, RSX, IntakeEx;
 
     // Constants
-    private static final double DRIVE_FWD = 0.75;
+    private static final double DRIVE_FWD = 0.5;
     private static final double DRIVE_TURN = .75;
-    private static final double SHOOTER_RPM = 1710;
+    private static final double SHOOTER_RPM = 1702;
     private static final double INTAKE_RPM = 1000;
 
     @Override
