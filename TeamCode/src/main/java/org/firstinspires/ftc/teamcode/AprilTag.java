@@ -200,6 +200,15 @@ public class AprilTag {
         return centerX - midpoint;
     }
 
+    public AprilTagDetection getTagById(int targetId) {
+        if (currentDetections == null) return null;
+
+        for (AprilTagDetection detection : currentDetections) {
+            if (detection.id == targetId) return detection;
+        }
+        return null; // not found
+    }
+
 
 
 }

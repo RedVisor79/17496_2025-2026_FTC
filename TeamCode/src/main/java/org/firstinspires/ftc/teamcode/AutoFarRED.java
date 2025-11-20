@@ -68,7 +68,7 @@ public class AutoFarRED extends LinearOpMode {
             // Update AprilTag readings
             vision.update();
 
-            AprilTagDetection tag = vision.getLatestTag();
+            AprilTagDetection tag = vision.getTagById(24);
 
             // Drive Fwd until...
             if (tag != null) {
