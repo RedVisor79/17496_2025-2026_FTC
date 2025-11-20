@@ -126,7 +126,12 @@ public class LegoNinjago extends LinearOpMode {
                  IntakeEx.setVelocity(INTAKE_VELOCITY);
             }
         }
-        else{
+        else if (gamepad1.y&&shooting){
+            LSX.setVelocity(0);
+            RSX.setVelocity(0);
+            shooting = false;
+        }
+        else {
             LSX.setVelocity(0);
             RSX.setVelocity(0);
             shooting = false;
