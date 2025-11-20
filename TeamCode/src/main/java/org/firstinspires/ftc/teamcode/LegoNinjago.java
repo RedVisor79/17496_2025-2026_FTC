@@ -26,10 +26,11 @@ public class LegoNinjago extends LinearOpMode {
     double lfPower;
     double rbPower;
     double rfPower;
+    boolean shooting=false;
 
     // Shooter velocity (tunable in FTC Dashboard)
-    public static double SHOOTER_VELOCITY = 1500;
-    public static double INTAKE_VELOCITY = 1000;
+    public static double SHOOTER_VELOCITY = 1550;
+    public static double INTAKE_VELOCITY = 1500;
 
     @Override
     public void runOpMode() {
@@ -66,12 +67,12 @@ public class LegoNinjago extends LinearOpMode {
 
             // Mecanum drive calculations
             double forward = -gamepad1.left_stick_y;
-            double strafe = -gamepad1.left_stick_x;
+            double strafe = gamepad1.left_stick_x;
             double turn = gamepad1.right_stick_x;
 
-            lbPower = forward - 0.5*strafe + turn;
+            lbPower = forward - 0.65*strafe + turn;
             lfPower = forward + strafe + turn;
-            rbPower = forward + 0.5*strafe - turn;
+            rbPower = forward + 0.65*strafe - turn;
             rfPower = forward - strafe - turn;
 
             // Normalize
@@ -109,7 +110,7 @@ public class LegoNinjago extends LinearOpMode {
         }
     }
 
-    // Shooter control (right trigger)
+    // Shooter control
     private void shooterEx() {
 
         if (gamepad1.dpad_up)
@@ -117,25 +118,28 @@ public class LegoNinjago extends LinearOpMode {
         if (gamepad1.dpad_down)
             SHOOTER_VELOCITY=1400;
 
-        if (gamepad1.right_trigger > 0) {
-            LSX.setVelocity(SHOOTER_VELOCITY);
-            RSX.setVelocity(SHOOTER_VELOCITY);
-        } else {
+        if (gamepad1.x&&!shooting) {
+            if (gamepad1.right_trigger>0) {
+                LSX.setVelocity(SHOOTER_VELOCITY);
+                RSX.setVelocity(SHOOTER_VELOCITY);
+            }
+        }
+        else{
             LSX.setVelocity(0);
             RSX.setVelocity(0);
         }
     }
 
-    // Intake control (left trigger or bumper)
+    // Intake control
     private void intake() {
-        if (gamepad1.left_trigger > 0 || gamepad1.dpad_left)
-            IntakeEx.setVelocity(INTAKE_VELOCITY);
-        else if (gamepad1.left_bumper||gamepad1.dpad_right)
-            IntakeEx.setVelocity(-INTAKE_VELOCITY);
-        else
-            IntakeEx.setVelocity(0);
+        if (!shooting){
+            if (gamepad1.dpad_right)
+                IntakeEx.setVelocity(INTAKE_VELOCITY);
+            else if (gamepad1.dpad_left)
+                IntakeEx.setVelocity(-INTAKE_VELOCITY);
+            else
+                IntakeEx.setVelocity(0);
+        }
     }
-
-    // Test mode to individually activate motors
 
 }
