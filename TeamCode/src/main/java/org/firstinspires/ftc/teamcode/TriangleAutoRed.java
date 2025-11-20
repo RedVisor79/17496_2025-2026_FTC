@@ -17,7 +17,7 @@ public class TriangleAutoRed extends LinearOpMode {
     // Constants
     private static final double DRIVE_FWD = 0.75;
     private static final double DRIVE_TURN = .75;
-    private static final double SHOOTER_RPM = 1780;
+    private static final double SHOOTER_RPM = 1702;
     private static final double INTAKE_RPM = 1000;
 
     @Override
@@ -56,7 +56,7 @@ public class TriangleAutoRed extends LinearOpMode {
         // ---------------------------------------------------------------------
         // Your previous 80° turn was 700ms
         // Scale factor: 150 / 80 = 1.875 → 700 * 1.875 = 1312 ms
-        drive(DRIVE_TURN, DRIVE_TURN, -DRIVE_TURN, -DRIVE_TURN, 85);
+        drive(DRIVE_TURN, DRIVE_TURN, -DRIVE_TURN, -DRIVE_TURN, 109);
 
         // ---------------------------------------------------------------------
         // 3️⃣ Spin SHOOTER UP (1400 RPM) for 1 sec
