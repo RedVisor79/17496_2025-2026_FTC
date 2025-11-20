@@ -25,7 +25,6 @@ public class AutoFarRED extends LinearOpMode {
     private static final double DRIVE_TURN = 0.5;
     private static final double SHOOTER_RPM = 1702;
     private static final double INTAKE_RPM1 = 1000;
-    private static final double INTAKE_RPM2 = 800;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -77,7 +76,7 @@ public class AutoFarRED extends LinearOpMode {
                 double dist = vision.getDistanceInches(tag);
                 telemetry.addData("Distance (in)", dist);
 
-                if (dist > targetDist) {
+                if (dist < targetDist) {
 
                     // Stop driving
                     drive(0, 0, 0, 0);
@@ -145,8 +144,10 @@ public class AutoFarRED extends LinearOpMode {
 
         // Run INTAKE for 3 sec WHILE shooter stays running
         IntakeEx.setVelocity(INTAKE_RPM1);
-        sleep(3000);
-        // Stop intake
+        sleep(1500);
+        IntakeEx.setVelocity(0);
+        IntakeEx.setVelocity(INTAKE_RPM1);
+        sleep(1500);
         IntakeEx.setVelocity(0);
 
         // Stop Shooter
