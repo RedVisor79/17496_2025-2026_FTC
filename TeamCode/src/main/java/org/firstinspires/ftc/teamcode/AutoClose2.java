@@ -20,13 +20,13 @@ public class AutoClose2 extends LinearOpMode {
     private DcMotorEx LSX, RSX, IntakeEx;
 
     // Constants
-    private static final double DRIVE_FWD = 0.57;              // slightly increased
+    private static final double DRIVE_FWD = .75;              // slightly increased
     private static final double SHOOTER_RPM = 1450;
     private static final double INTAKE_RPM1 = 1350;
     private static final double INTAKE_RPM2 = 800;
 
     // Stop earlier (65 → 66)
-    private static final double TARGET_DIST_IN = 66.0;
+    private static final double TARGET_DIST_IN = 2720;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -75,7 +75,7 @@ public class AutoClose2 extends LinearOpMode {
         // PHASE A — WAIT FOR STABLE TAG
         // =====================================================
         double startA = getRuntime();
-        while (opModeIsActive() && getRuntime() - startA < 4.0) {
+        while (opModeIsActive() && getRuntime() - startA < 0.5) {
 
             vision.update();
             AprilTagDetection tag = vision.getLatestTag();
@@ -197,7 +197,7 @@ public class AutoClose2 extends LinearOpMode {
     }
 
     private void strafeRightTimed(double inches) {
-        double time = inches * 55;   // tune this based on robot
+        double time = inches * 300;   // tune this based on robot
         drive(0.5, -0.5, -0.5, 0.5);
         sleep((long) time);
         drive(0,0,0,0);
