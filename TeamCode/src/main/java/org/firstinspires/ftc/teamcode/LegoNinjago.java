@@ -29,8 +29,8 @@ public class LegoNinjago extends LinearOpMode {
     boolean shooting=false;
 
     // Shooter velocity (tunable in FTC Dashboard)
-    public static double SHOOTER_VELOCITY = 1550;
-    public static double INTAKE_VELOCITY = 1500;
+    public static double SHOOTER_VELOCITY = 1600;
+    public static double INTAKE_VELOCITY = 1600;
 
     @Override
     public void runOpMode() {
@@ -114,24 +114,25 @@ public class LegoNinjago extends LinearOpMode {
     private void shooterEx() {
 
         if (gamepad1.dpad_up)
-            SHOOTER_VELOCITY=1700;
-        if (gamepad1.dpad_down)
+            SHOOTER_VELOCITY=1750;
+        if (gamepad1.dpad_left)
             SHOOTER_VELOCITY=1400;
 
-        if (gamepad1.y&&!shooting) {
-            shooting = true;
+        if (gamepad1.x){
             LSX.setVelocity(SHOOTER_VELOCITY);
             RSX.setVelocity(SHOOTER_VELOCITY);
-            if (gamepad1.right_trigger>0) {
-                 IntakeEx.setVelocity(INTAKE_VELOCITY);
-            }
+            shooting=true;
         }
-        else if (gamepad1.y&&shooting){
+        if (gamepad1.a){
             LSX.setVelocity(0);
             RSX.setVelocity(0);
             shooting = false;
         }
-        else {
+        if (gamepad1.b&&!shooting){
+            LSX.setVelocity(-SHOOTER_VELOCITY);
+            RSX.setVelocity(-SHOOTER_VELOCITY);
+            shooting=true;
+            sleep(10);
             LSX.setVelocity(0);
             RSX.setVelocity(0);
             shooting = false;
@@ -140,14 +141,12 @@ public class LegoNinjago extends LinearOpMode {
 
     // Intake control
     private void intake() {
-        if (!shooting){
-            if (gamepad1.dpad_right)
-                IntakeEx.setVelocity(INTAKE_VELOCITY);
-            else if (gamepad1.dpad_left)
-                IntakeEx.setVelocity(-INTAKE_VELOCITY);
-            else
-                IntakeEx.setVelocity(0);
-        }
+        if (gamepad1.right_trigger>0)
+            IntakeEx.setVelocity(INTAKE_VELOCITY);
+        else if (gamepad1.left_trigger>0)
+            IntakeEx.setVelocity(-INTAKE_VELOCITY);
+        else
+            IntakeEx.setVelocity(0);
     }
 
 }
