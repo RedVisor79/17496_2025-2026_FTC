@@ -29,7 +29,7 @@ public class LegoNinjago extends LinearOpMode {
     boolean shooting=false;
 
     // Shooter velocity (tunable in FTC Dashboard)
-    public static double SHOOTER_VELOCITY = 0;
+    public static double SHOOTER_VELOCITY = 1425;
     public static double INTAKE_VELOCITY = 1600;
 
     @Override
