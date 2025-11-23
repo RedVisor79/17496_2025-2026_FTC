@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
-@Autonomous(name="AutoFarRED")
-public class AutoFarRED extends LinearOpMode {
+@Autonomous(name="AutoFarBLUE")
+public class AutoFarBLUE extends LinearOpMode {
 
     // Drivetrain
     private DcMotor LB, LF, RB, RF;
@@ -27,9 +27,9 @@ public class AutoFarRED extends LinearOpMode {
     private static final double INTAKE_RPM = 1000;
 
     // Targeting constants
-    private static final int TARGET_TAG_ID = 24;   // RED GOAL TAG
+    private static final int TARGET_TAG_ID = 20;   // Blue GOAL TAG
     private static final double TARGET_DISTANCE_IN = 5495;
-    private static final double TARGET_RAW_X = -6.4;
+    private static final double TARGET_RAW_X = -2.13;
     private static final double RAW_X_TOLERANCE = 0.2;
 
     @Override
@@ -119,7 +119,7 @@ public class AutoFarRED extends LinearOpMode {
         IntakeEx.setVelocity(INTAKE_RPM);
         sleep(1500);
         IntakeEx.setVelocity(0);
-        IntakeEx.setVelocity(INTAKE_RPM);
+        IntakeEx.setVelocity(INTAKE_RPM-5);
         sleep(1500);
         IntakeEx.setVelocity(0);
 

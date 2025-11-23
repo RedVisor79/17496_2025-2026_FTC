@@ -227,7 +227,7 @@ public class AutoCloseBlue extends LinearOpMode {
         // CCW turn: left motors reverse, right motors forward
         double turnPower = 0.5;
         long turnMs = 700;    // same timing as before (~100°)
-        drive(-turnPower, -turnPower, +turnPower, +turnPower);
+        drive(-turnPower, -turnPower, turnPower, turnPower);
         sleep(turnMs);
 
         drive(0,0,0,0);
