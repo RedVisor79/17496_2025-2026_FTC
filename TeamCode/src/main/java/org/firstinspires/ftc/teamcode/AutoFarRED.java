@@ -21,7 +21,7 @@ public class AutoFarRED extends LinearOpMode {
 
     // Constants
     private static final double DRIVE_FWD = 0.5;
-    private static final double DRIVE_TURN = 0.5;
+    private static final double DRIVE_TURN = 0.2;
 
     private static final double SHOOTER_RPM = 1702;
     private static final double INTAKE_RPM = 1000;
@@ -30,7 +30,7 @@ public class AutoFarRED extends LinearOpMode {
     private static final int TARGET_TAG_ID = 24;   // RED GOAL TAG
     private static final double TARGET_DISTANCE_IN = 5495;
     private static final double TARGET_RAW_X = -6.4;
-    private static final double RAW_X_TOLERANCE = 0.03;
+    private static final double RAW_X_TOLERANCE = 0.2;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -96,10 +96,10 @@ public class AutoFarRED extends LinearOpMode {
 
                 if (rawX > TARGET_RAW_X) {
                     telemetry.addLine("Turning LEFT");
-                    drive(DRIVE_TURN, DRIVE_TURN, -DRIVE_TURN,-DRIVE_TURN);
+                    drive1(DRIVE_TURN, DRIVE_TURN, -DRIVE_TURN,-DRIVE_TURN, 5);
                 } else {
                     telemetry.addLine("Turning RIGHT");
-                    drive(-DRIVE_TURN, -DRIVE_TURN, DRIVE_TURN, DRIVE_TURN);
+                    drive1(-DRIVE_TURN, -DRIVE_TURN, DRIVE_TURN, DRIVE_TURN, 5);
                 }
             }
             else {
