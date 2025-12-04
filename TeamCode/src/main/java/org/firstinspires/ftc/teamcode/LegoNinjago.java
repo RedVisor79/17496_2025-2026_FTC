@@ -32,6 +32,20 @@ public class LegoNinjago extends LinearOpMode {
     public static double SHOOTER_VELOCITY = 1425;
     public static double INTAKE_VELOCITY = 1600;
 
+    // Odometry variables
+    double x = 0.0;
+    double y = 0.0;
+    double heading = 0.0;
+
+    static final double TICKS_PER_REV = 1120; // Example for NeverRest 40
+    static final double WHEEL_DIAMETER_INCHES = 4.0;
+    static final double TICKS_PER_INCH = TICKS_PER_REV / (Math.PI * WHEEL_DIAMETER_INCHES);
+
+    // Track width (distance between left and right wheels, adjust to your robot)
+    static final double TRACK_WIDTH = 12.0;
+
+    int prevLB = 0, prevLF = 0, prevRB = 0, prevRF = 0;
+
     @Override
     public void runOpMode() {
         ElapsedTime runtime = new ElapsedTime();
@@ -51,9 +65,20 @@ public class LegoNinjago extends LinearOpMode {
         LF.setDirection(DcMotor.Direction.REVERSE);
         RF.setDirection(DcMotor.Direction.FORWARD);
         RB.setDirection(DcMotor.Direction.FORWARD);
-        LSX.setDirection(DcMotorEx.Direction.REVERSE);
-        RSX.setDirection(DcMotorEx.Direction.FORWARD);
-        IntakeEx.setDirection(DcMotorEx.Direction.REVERSE);
+        LSX.setDirection(DcMotor.Direction.REVERSE);
+        RSX.setDirection(DcMotor.Direction.FORWARD);
+        IntakeEx.setDirection(DcMotor.Direction.REVERSE);
+
+        // Reset encoders
+        LB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        LB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        LF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        RB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        RF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -92,27 +117,63 @@ public class LegoNinjago extends LinearOpMode {
             RB.setPower(rbPower);
             RF.setPower(rfPower);
 
+            // --- Odometry update ---
+            int lb = LB.getCurrentPosition();
+            int lf = LF.getCurrentPosition();
+            int rb = RB.getCurrentPosition();
+            int rf = RF.getCurrentPosition();
+
+            int dLB = lb - prevLB;
+            int dLF = lf - prevLF;
+            int dRB = rb - prevRB;
+            int dRF = rf - prevRF;
+
+            prevLB = lb;
+            prevLF = lf;
+            prevRB = rb;
+            prevRF = rf;
+
+            double iLB = dLB / TICKS_PER_INCH;
+            double iLF = dLF / TICKS_PER_INCH;
+            double iRB = dRB / TICKS_PER_INCH;
+            double iRF = dRF / TICKS_PER_INCH;
+
+            // Local robot frame deltas
+            double dX = (iLF - iRF - iLB + iRB) / 4.0; // strafe
+            double dY = (iLF + iRF + iLB + iRB) / 4.0; // forward
+
+            // Heading change from encoder difference
+            double dTheta = ((iRF + iRB) - (iLF + iLB)) / (2.0 * TRACK_WIDTH);
+            heading += dTheta;
+
+            // Rotate into global coordinates
+            double cosH = Math.cos(heading);
+            double sinH = Math.sin(heading);
+
+            x += dX * cosH - dY * sinH;
+            y += dX * sinH + dY * cosH;
+            heading *= 180/Math.PI;
+
             // Telemetry (Driver Station + Dashboard)
             telemetry.addData("Status", "Run Time: " + runtime);
-            telemetry.addData("Robot Values:","");
             telemetry.addData("Shooter Velocity:", SHOOTER_VELOCITY);
             telemetry.addData("Intake:", INTAKE_VELOCITY);
             telemetry.addData("LB:", lbPower);
             telemetry.addData("LF:", lfPower);
             telemetry.addData("RB:", rbPower);
             telemetry.addData("RF:", rfPower);
-            telemetry.addData("Input Data:","");
-            telemetry.addData("Left Stick x:", gamepad1.left_stick_y);
-            telemetry.addData("Left Stick y:", gamepad1.left_stick_x);
-            telemetry.addData("Right Stick x:", gamepad1.right_stick_x);
-            telemetry.addData("Right Stick y:", gamepad1.right_stick_y);
+            telemetry.addData("Odometry:", "");
+            telemetry.addData("X (in)", x);
+            telemetry.addData("Y (in)", y);
+            telemetry.addData("Heading (degrees)", heading);
             telemetry.update();
+
+            heading *= Math.PI/180;
         }
     }
 
     // Shooter control
     private void shooterEx() {
-
         if (gamepad1.dpad_up)
             SHOOTER_VELOCITY=1750;
         if (gamepad1.dpad_left)
@@ -150,5 +211,4 @@ public class LegoNinjago extends LinearOpMode {
         else
             IntakeEx.setVelocity(0);
     }
-
 }
