@@ -43,7 +43,7 @@ public class AlignToBallColumn extends LinearOpMode {
         });
 
         // Stream to FTC Dashboard
-        CameraStreamServer.getInstance().setSource(webcam);
+        com.acmerobotics.dashboard.FtcDashboard.getInstance().startCameraStream(webcam, 30);
 
         telemetry.addLine("Ready. Press start.");
         telemetry.update();
