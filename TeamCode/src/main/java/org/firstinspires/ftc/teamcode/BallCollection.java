@@ -63,7 +63,7 @@ public class BallCollection extends LinearOpMode {
         // STEP 2 — DRIVE FORWARD
         // ---------------------------
         drive(0.4, 0.4, 0.4, 0.4);
-        sleep(1200);
+        sleep(1600);
         stopDrive();
 
         // ---------------------------
@@ -75,44 +75,18 @@ public class BallCollection extends LinearOpMode {
         // STEP 4 — DRIVE BACKWARD
         // ---------------------------
         drive(-0.6, -0.6, -0.6, -0.6);
-        sleep(1200);
+        sleep(1300);
         stopDrive();
+        sleep(100);
 
         // ---------------------------
-// STEP 5A — SEARCH FOR APRILTAG 24
-// ---------------------------
-        long searchStartTime = System.currentTimeMillis();
-        boolean tagFound = false;
-
-        while (opModeIsActive() && !tagFound) {
-            vision.update();
-            AprilTagDetection tag = vision.getTagById(24);
-
-            if (tag != null && tag.rawPose != null) {
-                tagFound = true;
-                break;
-            }
-
-            // Slow CCW search turn
-            drive(-0.2, -0.2, 0.2, 0.2);
-
-            // Safety timeout (2 seconds)
-            if (System.currentTimeMillis() - searchStartTime > 2000) {
-                break;
-            }
-        }
-
-        stopDrive();
-
-        if (!tagFound) {
-            telemetry.addLine("Tag 24 NOT FOUND");
-            telemetry.update();
-            return; // or continue without shooting if you prefer
-        }
-
+        // STEP 5 — TURN CCW UNTIL TAG 24 @ 45°
         // ---------------------------
-        // STEP 5B — TURN CCW TO 45° USING TAG
-        // ---------------------------
+
+        // Start turning FIRST
+        drive(-0.25, -0.25, 0.25, 0.25);
+
+        // Start timing at the same moment
         long turnStartTime = System.currentTimeMillis();
 
         while (opModeIsActive()) {
@@ -122,23 +96,24 @@ public class BallCollection extends LinearOpMode {
             if (tag != null && tag.rawPose != null) {
                 double rawX = tag.rawPose.x;
                 double rawZ = tag.rawPose.z;
-
                 double angleDeg = Math.toDegrees(Math.atan2(rawX, rawZ));
 
                 telemetry.addData("Angle", angleDeg);
                 telemetry.update();
 
-                if (Math.abs(angleDeg) >= TARGET_ANGLE_DEG) {
+                // Deadband to compensate for latency
+                if (angleDeg >= TARGET_ANGLE_DEG - 1.0) {
                     break;
                 }
             }
 
-            // CCW turn
-            drive(-TURN_POWER, -TURN_POWER, TURN_POWER, TURN_POWER);
+            sleep(20); // keeps loop timing stable
         }
 
+        // Stop and record duration
         stopDrive();
         long turnDuration = System.currentTimeMillis() - turnStartTime;
+
 
 
         // ---------------------------
