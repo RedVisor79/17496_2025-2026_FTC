@@ -33,7 +33,10 @@ public class LegoNinjago extends LinearOpMode {
     public static double INTAKE_VELOCITY = 1600;
 
     //100% of motors
-    public static double STRAFE_OFFSET=0.5;
+    public static double LB_STRAFE_OFFSET=0.5;
+    public static double LF_STRAFE_OFFSET=0.5;
+    public static double RB_STRAFE_OFFSET=0.5;
+    public static double RF_STRAFE_OFFSET=0.5;
 
     // Odometry variables
     double x = 0.0;
@@ -98,9 +101,19 @@ public class LegoNinjago extends LinearOpMode {
             double strafe = gamepad1.left_stick_x;
             double turn = gamepad1.right_stick_x;
 
-            lbPower = forward - STRAFE_OFFSET*strafe + turn;
+            /*lbPower = forward - LB_STRAFE_OFFSET*strafe + turn;
+            lfPower = forward + LF_STRAFE_OFFSET*strafe + turn;
+            rbPower = forward + RB_STRAFE_OFFSET*strafe - turn;
+            rfPower = forward - RF_STRAFE_OFFSET*strafe - turn;
+            */
+
+            if (strafe>=0.75){
+                forward = 0;
+                turn = 0;
+            }
+            lbPower = forward - strafe + turn;
+            rbPower = forward + strafe - turn;
             lfPower = forward + strafe + turn;
-            rbPower = forward + STRAFE_OFFSET*strafe - turn;
             rfPower = forward - strafe - turn;
 
             // Normalize
@@ -169,7 +182,10 @@ public class LegoNinjago extends LinearOpMode {
             telemetry.addData("X (in)", x);
             telemetry.addData("Y (in)", y);
             telemetry.addData("Heading (degrees)", heading);
-            telemetry.addData("Strafe Offset", STRAFE_OFFSET);
+            telemetry.addData("LB Strafe Offset", LB_STRAFE_OFFSET);
+            telemetry.addData("LF Strafe Offset", LF_STRAFE_OFFSET);
+            telemetry.addData("RB Strafe Offset", RB_STRAFE_OFFSET);
+            telemetry.addData("RF Strafe Offset", RF_STRAFE_OFFSET);
             telemetry.update();
 
             heading *= Math.PI/180;
