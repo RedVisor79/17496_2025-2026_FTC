@@ -20,10 +20,10 @@ public class BallCollection extends LinearOpMode {
     private AprilTag vision;
 
     // Constants
-    private static final double TURN_POWER = 0.3;
+    private static final double TURN_POWER = 0.30;
     private static final double TARGET_ANGLE_DEG = 45.0;
 
-    private static final double LAUNCHER_RPM = 1700;
+    private static final double LAUNCHER_RPM = 1400;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -63,30 +63,29 @@ public class BallCollection extends LinearOpMode {
         // STEP 2 — DRIVE FORWARD
         // ---------------------------
         drive(0.4, 0.4, 0.4, 0.4);
-        sleep(1600);
+        sleep(1900);
         stopDrive();
 
         // ---------------------------
         // STEP 3 — INTAKE OFF
         // ---------------------------
         IntakeEx.setPower(0);
+        sleep(25);
 
         // ---------------------------
         // STEP 4 — DRIVE BACKWARD
         // ---------------------------
-        drive(-0.6, -0.6, -0.6, -0.6);
-        sleep(1300);
+        drive(-0.5, -0.5, -0.5, -0.5);
+        sleep(1520);
         stopDrive();
         sleep(100);
 
         // ---------------------------
-        // STEP 5 — TURN CCW UNTIL TAG 24 @ 45°
+        // STEP 5 — TURN CCW UNTIL rawX <= -2.39
         // ---------------------------
 
-        // Start turning FIRST
-        drive(-0.25, -0.25, 0.25, 0.25);
+        drive(-0.17, -0.17, 0.17, 0.17);
 
-        // Start timing at the same moment
         long turnStartTime = System.currentTimeMillis();
 
         while (opModeIsActive()) {
@@ -95,24 +94,25 @@ public class BallCollection extends LinearOpMode {
 
             if (tag != null && tag.rawPose != null) {
                 double rawX = tag.rawPose.x;
-                double rawZ = tag.rawPose.z;
-                double angleDeg = Math.toDegrees(Math.atan2(rawX, rawZ));
 
-                telemetry.addData("Angle", angleDeg);
+                telemetry.addData("rawX", rawX);
                 telemetry.update();
 
-                // Deadband to compensate for latency
-                if (angleDeg >= TARGET_ANGLE_DEG - 1.0) {
+                // EXIT CONDITION — stop AND leave loop
+                if (rawX >= -2.18) {
                     break;
                 }
             }
 
-            sleep(20); // keeps loop timing stable
+            sleep(15);
         }
 
-        // Stop and record duration
+        // Stop motors ONCE
         stopDrive();
+
+        // Record duration AFTER loop exits
         long turnDuration = System.currentTimeMillis() - turnStartTime;
+
 
 
 
