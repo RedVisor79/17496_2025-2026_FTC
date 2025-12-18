@@ -20,7 +20,7 @@ public class BallCollection extends LinearOpMode {
     private AprilTag vision;
 
     // Constants
-    private static final double TURN_POWER = 0.30;
+    private static double TURN_POWER = 0.17;
     private static final double TARGET_ANGLE_DEG = 45.0;
 
     private static final double LAUNCHER_RPM = 1400;
@@ -62,8 +62,8 @@ public class BallCollection extends LinearOpMode {
         // ---------------------------
         // STEP 2 — DRIVE FORWARD
         // ---------------------------
-        drive(0.4, 0.4, 0.4, 0.4);
-        sleep(1900);
+        drive(0.3, 0.3, 0.3, 0.3);
+        sleep(2050);
         stopDrive();
 
         // ---------------------------
@@ -141,10 +141,13 @@ public class BallCollection extends LinearOpMode {
         RSX.setVelocity(0);
 
         // ---------------------------
-        // STEP 9 — TURN BACK CW (SAME AMOUNT)
+        // STEP 9 — TURN BACK CW (SAME AMOUNT) + a bit more to make the 90
         // ---------------------------
         drive(TURN_POWER, TURN_POWER, -TURN_POWER, -TURN_POWER);
         sleep(turnDuration);
+        TURN_POWER = 0.3;
+        drive(TURN_POWER, TURN_POWER, -TURN_POWER, -TURN_POWER);
+        sleep(80);
         stopDrive();
     }
 
