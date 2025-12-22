@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
-@Config
 @Autonomous(name = "TurnCalibration")
 public class TurnCalibration extends LinearOpMode {
 
@@ -24,7 +23,7 @@ public class TurnCalibration extends LinearOpMode {
 
     // CALIBRATE THIS:
     // degrees per second when turning at 0.3 power
-    public static double DEG_PER_SEC_AT_0_3 = 150.0;
+    public static final double DEG_PER_SEC_AT_0_3 = 47;
 
     private static final double TARGET_ANGLE_DEG = 45.0;
     private static final double TAG_WAIT_TIMEOUT = 2.0;

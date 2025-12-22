@@ -221,7 +221,7 @@ public class AutoCloseRed extends LinearOpMode {
 
         LSX.setVelocity(0);
         RSX.setVelocity(0);
-
+        /**
         // =====================================================
         // REPLACED: Final movement -> do an in-place ~100° turn
         // followed by 2 seconds forward at normal DRIVE_FWD speed.
@@ -248,6 +248,7 @@ public class AutoCloseRed extends LinearOpMode {
         stopAll();
         telemetry.addLine("AutoClose complete");
         telemetry.update();
+         */
     }
 
     private void stopAll() {
