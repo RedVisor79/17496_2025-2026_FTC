@@ -3,128 +3,65 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 
 @Config
-@TeleOp(name = "LegoNinjago2")
+@TeleOp(name = "LegoNinjago2", group = "Calibration")
 public class LegoNinjago2 extends LinearOpMode {
 
-    private DcMotor LB; // 0C
-    private DcMotor LF; // 1C
-    private DcMotor RB; // 2C
-    private DcMotor RF; // 3C
-    private DcMotorEx LSX; // 0E
-    private DcMotorEx RSX; // 1E
-    private DcMotorEx IntakeEx; // 2E
+    private DcMotor LB, LF, RB, RF;
 
-    // Drive power values
-    double lbPower;
-    double lfPower;
-    double rbPower;
-    double rfPower;
-    boolean shooting=false;
-
-    // Shooter velocity (tunable in FTC Dashboard)
-    public static double SHOOTER_VELOCITY = 1425;
-    public static double INTAKE_VELOCITY = 1600;
-
-    // Strafe compensation factors (tunable via FTC Dashboard)
-    // Increase front multiplier to give more power to front wheels during strafe
-    public static double FRONT_STRAFE_MULTIPLIER = 1.3;
-    // Decrease back multiplier to reduce power to back wheels during strafe
-    public static double BACK_STRAFE_MULTIPLIER = 0.7;
-
-    // Individual wheel strafe compensation (fine-tune each wheel)
-    public static double LF_STRAFE_COMP = 1.0;
-    public static double RF_STRAFE_COMP = 1.0;
-    public static double LB_STRAFE_COMP = 1.0;
-    public static double RB_STRAFE_COMP = 1.0;
-
-    // Odometry variables
-    double x = 0.0;
-    double y = 0.0;
-    double heading = 0.0;
-
-    static final double TICKS_PER_REV = 1120; // Example for NeverRest 40
-    static final double WHEEL_DIAMETER_INCHES = 4.0;
-    static final double TICKS_PER_INCH = TICKS_PER_REV / (Math.PI * WHEEL_DIAMETER_INCHES);
-
-    // Track width (distance between left and right wheels, adjust to your robot)
-    static final double TRACK_WIDTH = 12.0;
-
-    int prevLB = 0, prevLF = 0, prevRB = 0, prevRF = 0;
+    // Fixed strafe offsets
+    public static double LB_OFFSET = 1.050;
+    public static double LF_OFFSET = 1.027;
+    public static double RB_OFFSET = 1.037;
+    public static double RF_OFFSET = 1.000;
 
     @Override
     public void runOpMode() {
-        ElapsedTime runtime = new ElapsedTime();
         FtcDashboard dashboard = FtcDashboard.getInstance();
+        telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 
         // Hardware mapping
         LB = hardwareMap.get(DcMotor.class, "LB");
         LF = hardwareMap.get(DcMotor.class, "LF");
         RB = hardwareMap.get(DcMotor.class, "RB");
         RF = hardwareMap.get(DcMotor.class, "RF");
-        LSX = hardwareMap.get(DcMotorEx.class, "LS");
-        RSX = hardwareMap.get(DcMotorEx.class, "RS");
-        IntakeEx = hardwareMap.get(DcMotorEx.class, "Intake");
 
         // Motor directions
         LB.setDirection(DcMotor.Direction.FORWARD);
         LF.setDirection(DcMotor.Direction.REVERSE);
         RF.setDirection(DcMotor.Direction.FORWARD);
         RB.setDirection(DcMotor.Direction.FORWARD);
-        LSX.setDirection(DcMotor.Direction.REVERSE);
-        RSX.setDirection(DcMotor.Direction.FORWARD);
-        IntakeEx.setDirection(DcMotor.Direction.REVERSE);
 
-        // Reset encoders
-        LB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RF.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        LB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        LF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        RF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        telemetry.addData("Status", "Initialized");
-        telemetry.addData("Instructions", "Use FTC Dashboard to tune strafe multipliers");
+        telemetry.addLine("LegoNinjago2 Ready");
+        telemetry.addLine("Strafe LEFT  : dpad_left");
+        telemetry.addLine("Strafe RIGHT : dpad_right");
         telemetry.update();
 
         waitForStart();
-        runtime.reset();
 
         while (opModeIsActive()) {
-            shooterEx();
-            intake();
 
-            // Mecanum drive calculations
             double forward = -gamepad1.left_stick_y;
-            double strafe = gamepad1.left_stick_x;
             double turn = gamepad1.right_stick_x;
 
-            // Apply compensated strafe to each wheel
-            // Front wheels get more power, back wheels get less power
-            double lfStrafe = strafe * FRONT_STRAFE_MULTIPLIER * LF_STRAFE_COMP;
-            double rfStrafe = strafe * FRONT_STRAFE_MULTIPLIER * RF_STRAFE_COMP;
-            double lbStrafe = strafe * BACK_STRAFE_MULTIPLIER * LB_STRAFE_COMP;
-            double rbStrafe = strafe * BACK_STRAFE_MULTIPLIER * RB_STRAFE_COMP;
+            double strafe = 0;
+            if (gamepad1.dpad_left)  strafe = -1;
+            if (gamepad1.dpad_right) strafe = 1;
 
-            // Calculate motor powers with compensated strafe values
-            lbPower = forward - 0.65 * lbStrafe + turn;
-            lfPower = forward + lfStrafe + turn;
-            rbPower = forward + 0.65 * rbStrafe - turn;
-            rfPower = forward - rfStrafe - turn;
+            double lbPower = forward - LB_OFFSET * strafe + turn;
+            double lfPower = forward + LF_OFFSET * strafe + turn;
+            double rbPower = forward + RB_OFFSET * strafe - turn;
+            double rfPower = forward - RF_OFFSET * strafe - turn;
 
             // Normalize
-            double max = Math.max(Math.max(Math.abs(lfPower), Math.abs(rfPower)),
-                    Math.max(Math.abs(lbPower), Math.abs(rbPower)));
-
+            double max = Math.max(
+                    Math.max(Math.abs(lbPower), Math.abs(lfPower)),
+                    Math.max(Math.abs(rbPower), Math.abs(rfPower))
+            );
             if (max > 1.0) {
                 lbPower /= max;
                 lfPower /= max;
@@ -132,108 +69,23 @@ public class LegoNinjago2 extends LinearOpMode {
                 rfPower /= max;
             }
 
-            // Set drive motor power
             LB.setPower(lbPower);
             LF.setPower(lfPower);
             RB.setPower(rbPower);
             RF.setPower(rfPower);
 
-            // --- Odometry update ---
-            int lb = LB.getCurrentPosition();
-            int lf = LF.getCurrentPosition();
-            int rb = RB.getCurrentPosition();
-            int rf = RF.getCurrentPosition();
-
-            int dLB = lb - prevLB;
-            int dLF = lf - prevLF;
-            int dRB = rb - prevRB;
-            int dRF = rf - prevRF;
-
-            prevLB = lb;
-            prevLF = lf;
-            prevRB = rb;
-            prevRF = rf;
-
-            double iLB = dLB / TICKS_PER_INCH;
-            double iLF = dLF / TICKS_PER_INCH;
-            double iRB = dRB / TICKS_PER_INCH;
-            double iRF = dRF / TICKS_PER_INCH;
-
-            // Local robot frame deltas
-            double dX = (iLF - iRF - iLB + iRB) / 4.0; // strafe
-            double dY = (iLF + iRF + iLB + iRB) / 4.0; // forward
-
-            // Heading change from encoder difference
-            double dTheta = ((iRF + iRB) - (iLF + iLB)) / (2.0 * TRACK_WIDTH);
-            heading += dTheta;
-
-            // Rotate into global coordinates
-            double cosH = Math.cos(heading);
-            double sinH = Math.sin(heading);
-
-            x += dX * cosH - dY * sinH;
-            y += dX * sinH + dY * cosH;
-
-            double headingDegrees = heading * 180 / Math.PI;
-
-            // Telemetry (Driver Station + Dashboard)
-            telemetry.addData("Status", "Run Time: " + runtime);
-            telemetry.addData("--- Strafe Compensation ---", "");
-            telemetry.addData("Front Multiplier", FRONT_STRAFE_MULTIPLIER);
-            telemetry.addData("Back Multiplier", BACK_STRAFE_MULTIPLIER);
-            telemetry.addData("--- Shooter ---", "");
-            telemetry.addData("Shooter Velocity", SHOOTER_VELOCITY);
-            telemetry.addData("Intake", INTAKE_VELOCITY);
-            telemetry.addData("--- Motor Powers ---", "");
             telemetry.addData("LB", "%.2f", lbPower);
             telemetry.addData("LF", "%.2f", lfPower);
             telemetry.addData("RB", "%.2f", rbPower);
             telemetry.addData("RF", "%.2f", rfPower);
-            telemetry.addData("--- Odometry ---", "");
-            telemetry.addData("X (in)", "%.2f", x);
-            telemetry.addData("Y (in)", "%.2f", y);
-            telemetry.addData("Heading (deg)", "%.2f", headingDegrees);
+
+            telemetry.addLine();
+            telemetry.addData("LB_OFFSET", LB_OFFSET);
+            telemetry.addData("LF_OFFSET", LF_OFFSET);
+            telemetry.addData("RB_OFFSET", RB_OFFSET);
+            telemetry.addData("RF_OFFSET", RF_OFFSET);
+
             telemetry.update();
         }
-    }
-
-    // Shooter control
-    private void shooterEx() {
-        if (gamepad1.dpad_up)
-            SHOOTER_VELOCITY=1750;
-        if (gamepad1.dpad_left)
-            SHOOTER_VELOCITY=1425;
-        if (gamepad1.dpad_down)
-            SHOOTER_VELOCITY=400;
-
-        if (gamepad1.a){
-            LSX.setVelocity(SHOOTER_VELOCITY);
-            RSX.setVelocity(SHOOTER_VELOCITY);
-            shooting=true;
-        }
-        if (gamepad1.x){
-            LSX.setVelocity(0);
-            RSX.setVelocity(0);
-            shooting = false;
-        }
-        if (gamepad1.b&&!shooting){
-            LSX.setVelocity(-SHOOTER_VELOCITY);
-            RSX.setVelocity(-SHOOTER_VELOCITY);
-            shooting=true;
-            sleep(10);
-            LSX.setVelocity(0);
-            RSX.setVelocity(0);
-            shooting = false;
-        }
-    }
-
-    // Intake control
-    private void intake() {
-        if (gamepad1.right_trigger>0)
-            IntakeEx.setVelocity(INTAKE_VELOCITY);
-        else if (gamepad1.left_trigger>0)
-            IntakeEx.setVelocity(-INTAKE_VELOCITY);
-        else
-            IntakeEx.setVelocity(0);
     }
 }
