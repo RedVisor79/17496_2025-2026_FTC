@@ -52,6 +52,8 @@ public class LegoNinjago extends LinearOpMode {
 
     int prevLB = 0, prevLF = 0, prevRB = 0, prevRF = 0;
 
+    AprilTagVisionDashboardTester cam = new AprilTagVisionDashboardTester();
+
     @Override
     public void runOpMode() {
         ElapsedTime runtime = new ElapsedTime();
@@ -95,6 +97,7 @@ public class LegoNinjago extends LinearOpMode {
         while (opModeIsActive()) {
             shooterEx();
             intake();
+            cam.runOpMode();
 
             // Mecanum drive calculations
             double forward = -gamepad1.left_stick_y;
