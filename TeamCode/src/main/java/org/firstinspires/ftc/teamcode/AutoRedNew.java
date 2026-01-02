@@ -17,7 +17,7 @@ public class AutoRedNew extends LinearOpMode {
     private AprilTag vision;
 
     public static long TURN_TIME = 1800;
-    private static final double LAUNCHER_RPM = 1370;
+    private static final double LAUNCHER_RPM = 1350;
     public static final double DEG_PER_SEC = 58;
     private static final double TURN_RPM = 860;
     private static double TURN_POWER = 0.17;
@@ -179,11 +179,11 @@ public class AutoRedNew extends LinearOpMode {
         if (!shooterReady) {
             telemetry.addLine("Shooter timed spin-up fallback");
             telemetry.update();
-            sleep(1500);
+            //sleep(1500);
         } else {
             telemetry.addLine("Shooter ready");
             telemetry.update();
-            sleep(200);
+            //sleep(200);
         }
 
         telemetry.addLine("Feeding...");
@@ -261,15 +261,15 @@ public class AutoRedNew extends LinearOpMode {
         // ---------------------------
         // STEP 0 — DRIVE FORWARD
         // ---------------------------
-        drive(700, 700, 700, 700);
-        sleep(300);
+        drive(-700, -700, -700, -700);
+        sleep(100);
         stopDrive();
-        sleep(50);
+        //sleep(50);
         // ---------------------------
         // STEP 0.1 — TURN TO BALLS
         // ---------------------------
         drive(600, 600, -600, -600);
-        sleep(TURN_TIME);
+        sleep(1600);
         stopDrive();
 
         // ---------------------------
@@ -281,8 +281,8 @@ public class AutoRedNew extends LinearOpMode {
         // ---------------------------
         // STEP 0.3 — DRIVE INTO BALLS
         // ---------------------------
-        drive(450, 450, 450, 450);
-        sleep(4500);
+        drive(400, 400, 400, 400);
+        sleep(4750);
         stopDrive();
 
         // ---------------------------
@@ -295,7 +295,7 @@ public class AutoRedNew extends LinearOpMode {
         // STEP 0.5 — DRIVE BACKWARD
         // ---------------------------
         drive(-900, -900, -900, -900);
-        sleep(50);
+        sleep(100);
         IntakeEx.setVelocity(0);
         sleep(2500);
         stopDrive();
@@ -305,7 +305,7 @@ public class AutoRedNew extends LinearOpMode {
         // STEP 0.6 — TURN CCW UNTIL rawX
         // ---------------------------
 
-        drive(-500, -500, 500, 500);
+        drive(-250, -250, 250, 250);
 
         long turnStartTime = System.currentTimeMillis();
 
@@ -338,10 +338,10 @@ public class AutoRedNew extends LinearOpMode {
         // ---------------------------
         // STEP 0.7 — SLIGHT OUTTAKE
         // ---------------------------
-        IntakeEx.setVelocity(-INTAKE_RPM1);
-        LSX.setVelocity(-LAUNCHER_RPM);
-        RSX.setVelocity(-LAUNCHER_RPM);
-        sleep(10);
+        IntakeEx.setVelocity(-1800);
+        LSX.setVelocity(-1350);
+        RSX.setVelocity(-1350);
+        sleep(500);
         LSX.setVelocity(0);
         RSX.setVelocity(0);
         IntakeEx.setPower(0);
