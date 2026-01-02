@@ -4,14 +4,15 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-
+@Config
 @Autonomous(name = "TurnCalibration")
 public class TurnCalibration extends LinearOpMode {
 
     // Drive motors
-    private DcMotor LF, LB, RF, RB;
+    private DcMotorEx LF, LB, RF, RB;
 
     // Vision
     private AprilTag vision;
@@ -19,11 +20,11 @@ public class TurnCalibration extends LinearOpMode {
     // ==============================
     // TUNING CONSTANTS
     // ==============================
-    private static final double TURN_POWER = 0.3;
+    private static final double TURN_POWER = 860;
 
     // CALIBRATE THIS:
-    // degrees per second when turning at 0.3 power
-    public static final double DEG_PER_SEC_AT_0_3 = 47;
+    // degrees per second when turning at 200 rpm
+    public static final double DEG_PER_SEC = 68;
 
     private static final double TARGET_ANGLE_DEG = 45.0;
     private static final double TAG_WAIT_TIMEOUT = 2.0;
@@ -34,20 +35,15 @@ public class TurnCalibration extends LinearOpMode {
         // ==============================
         // HARDWARE MAP
         // ==============================
-        LF = hardwareMap.get(DcMotor.class, "LF");
-        LB = hardwareMap.get(DcMotor.class, "LB");
-        RF = hardwareMap.get(DcMotor.class, "RF");
-        RB = hardwareMap.get(DcMotor.class, "RB");
+        LF = hardwareMap.get(DcMotorEx.class, "LF");
+        LB = hardwareMap.get(DcMotorEx.class, "LB");
+        RF = hardwareMap.get(DcMotorEx.class, "RF");
+        RB = hardwareMap.get(DcMotorEx.class, "RB");
 
-        LF.setDirection(DcMotor.Direction.REVERSE);
-        LB.setDirection(DcMotor.Direction.FORWARD);
-        RF.setDirection(DcMotor.Direction.FORWARD);
-        RB.setDirection(DcMotor.Direction.FORWARD);
-
-        LF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        LB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        RF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        RB.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        LF.setDirection(DcMotorEx.Direction.REVERSE);
+        LB.setDirection(DcMotorEx.Direction.FORWARD);
+        RF.setDirection(DcMotorEx.Direction.FORWARD);
+        RB.setDirection(DcMotorEx.Direction.FORWARD);
 
         telemetry.addLine("Initializing AprilTag camera...");
         telemetry.update();
@@ -97,7 +93,7 @@ public class TurnCalibration extends LinearOpMode {
         double turnDegrees = TARGET_ANGLE_DEG - savedThetaAbsDeg;
         turnDegrees = Math.max(0.0, turnDegrees); // force positive
 
-        double turnTimeSec = turnDegrees / DEG_PER_SEC_AT_0_3;
+        double turnTimeSec = turnDegrees / DEG_PER_SEC;
         long turnTimeMs = (long)(turnTimeSec * 1000);
 
         telemetry.addData("Turn degrees", "%.2f", turnDegrees);
@@ -116,17 +112,15 @@ public class TurnCalibration extends LinearOpMode {
 
         telemetry.addLine("Turn complete");
         telemetry.update();
-
-        sleep(1000);
     }
 
     // ==============================
     // DRIVE HELPER
     // ==============================
     private void drive(double lf, double lb, double rf, double rb) {
-        LF.setPower(lf);
-        LB.setPower(lb);
-        RF.setPower(rf);
-        RB.setPower(rb);
+        LF.setVelocity(lf);
+        LB.setVelocity(lb);
+        RF.setVelocity(rf);
+        RB.setVelocity(rb);
     }
 }

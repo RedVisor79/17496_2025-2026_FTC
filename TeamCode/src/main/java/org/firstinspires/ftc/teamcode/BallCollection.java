@@ -17,6 +17,7 @@ public class BallCollection extends LinearOpMode {
     // Intake + Launcher
     private DcMotorEx IntakeEx, LSX, RSX;
 
+
     // Vision
     private AprilTag vision;
 

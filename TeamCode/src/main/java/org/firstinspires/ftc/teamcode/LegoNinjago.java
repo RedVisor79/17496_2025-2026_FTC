@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @Config
 @TeleOp(name = "LegoNinjago")
@@ -30,7 +31,7 @@ public class LegoNinjago extends LinearOpMode {
 
     // Shooter velocity (tunable in FTC Dashboard)
     public static double SHOOTER_VELOCITY = 1425;
-    public static double INTAKE_VELOCITY = 1600;
+    public static double INTAKE_VELOCITY = 1800;
 
     //100% of motors
     public static double LB_STRAFE_OFFSET=0.5;
@@ -52,7 +53,7 @@ public class LegoNinjago extends LinearOpMode {
 
     int prevLB = 0, prevLF = 0, prevRB = 0, prevRF = 0;
 
-    AprilTagVisionDashboardTester cam = new AprilTagVisionDashboardTester();
+    AprilTag cam;
 
     @Override
     public void runOpMode() {
@@ -91,13 +92,23 @@ public class LegoNinjago extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
+        telemetry.addLine("Initializing AprilTag Vision...");
+        telemetry.update();
+
+        // Create your AprilTag vision object
+        cam = new AprilTag(hardwareMap, telemetry);
+
+        telemetry.addLine("Vision Ready!");
+        telemetry.update();
+
+
         waitForStart();
         runtime.reset();
 
         while (opModeIsActive()) {
             shooterEx();
             intake();
-            cam.runOpMode();
+            camera();
 
             // Mecanum drive calculations
             double forward = -gamepad1.left_stick_y;
@@ -194,6 +205,7 @@ public class LegoNinjago extends LinearOpMode {
 
             heading *= Math.PI/180;
         }
+        cam.cameraOff();
     }
 
     // Shooter control
@@ -234,5 +246,25 @@ public class LegoNinjago extends LinearOpMode {
             IntakeEx.setVelocity(-INTAKE_VELOCITY);
         else
             IntakeEx.setVelocity(0);
+    }
+
+    private void camera(){
+        cam.update();
+
+        // Get the most recent detection
+        AprilTagDetection tag = cam.getLatestTag();
+
+        // ------------------------------
+        // DRIVER STATION TELEMETRY
+        // ------------------------------
+        cam.addTelemetry();
+        telemetry.update();
+
+        // ------------------------------
+        // FTC DASHBOARD TELEMETRY
+        // ------------------------------
+        cam.addDashboardTelemetry(tag);
+
+        sleep(1);
     }
 }
