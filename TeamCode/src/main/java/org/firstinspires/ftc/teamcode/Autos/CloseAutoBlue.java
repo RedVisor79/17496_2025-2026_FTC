@@ -1,13 +1,13 @@
-package org.firstinspires.ftc.teamcode;
-import com.acmerobotics.dashboard.config.Config;
+package org.firstinspires.ftc.teamcode.Autos;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+
+import org.firstinspires.ftc.teamcode.AprilTagItems.AprilTag;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
-@Autonomous(name = "NewAutoBlue")
-public class NewAutoBlue extends LinearOpMode {
+@Autonomous(name = "CloseAutoBlue")
+public class CloseAutoBlue extends LinearOpMode {
 
     // Drivetrain
     private DcMotorEx LF, LB, RF, RB;
