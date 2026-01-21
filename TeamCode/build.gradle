@@ -17,5 +17,6 @@ dependencies {
     implementation project(':FtcRobotController')
 
     // ✅ FTC Dashboard library for telemetry and live tuning
-    implementation 'com.acmerobotics.dashboard:dashboard:0.4.8'
+    implementation "com.acmerobotics.roadrunner:core:0.5.6"
+
 }

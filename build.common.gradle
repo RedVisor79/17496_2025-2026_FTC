@@ -54,6 +54,7 @@ android {
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 28
 
+
         /**
          * Keep versionCode and versionName of robot controller applications
          * in sync with the FtcRobotController module manifest.
@@ -73,6 +74,7 @@ android {
 
         versionCode vCode
         versionName vName
+        //multiDexEnabled true
     }
 
     buildTypes {
@@ -113,3 +115,4 @@ repositories {
     mavenCentral()
     maven { url 'https://maven.brott.dev/' } // ✅ Acme Robotics + FTC libraries
 }
+
