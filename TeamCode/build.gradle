@@ -12,23 +12,10 @@ android {
     }
 }
 
-repositories {
-    maven {
-        url = 'https://maven.brott.dev/'
-    }
-}
-
-
 dependencies {
     // Link to the main FTC Robot Controller module
     implementation project(':FtcRobotController')
 
     // ✅ FTC Dashboard library for telemetry and live tuning
-    implementation "com.acmerobotics.roadrunner:core:1.0.1"
-    implementation "com.acmerobotics.roadrunner:actions:1.0.1"
-    implementation "com.acmerobotics.roadrunner:ftc:0.1.25"
-
     implementation 'com.acmerobotics.dashboard:dashboard:0.4.8'
-
-
 }
