@@ -19,5 +19,7 @@ dependencies {
     // ✅ FTC Dashboard library for telemetry and live tuning
     implementation "com.acmerobotics.roadrunner:core:0.5.6"
     implementation "com.acmerobotics.dashboard:dashboard:0.4.3"
-
+    implementation "com.fasterxml.jackson.core:jackson-core:2.13.3"
+    implementation "com.fasterxml.jackson.core:jackson-databind:2.13.3"
+    implementation "org.apache.commons:commons-math3:3.6.1"
 }
