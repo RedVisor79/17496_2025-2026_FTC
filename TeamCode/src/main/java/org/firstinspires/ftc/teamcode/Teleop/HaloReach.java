@@ -1,17 +1,12 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-
-import org.firstinspires.ftc.teamcode.AprilTagItems.AprilTag;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 @Config
 @TeleOp(name = "HaloReach")
